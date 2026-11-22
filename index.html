@@ -47,6 +47,9 @@
 :root[data-kid="emil"][data-theme="dark"]{
   --bg:#10180f; --surface:#182417; --surface2:#141e13; --ink:#e5f0e2; --muted:#98ae94; --line:#2b3b29;
   --accent:#7fd27a; --accent-ink:#0a2108; --accent-soft:#1c3a1a; --b0:#344a33}
+.brand i.langsw{cursor:pointer;position:relative}
+.brand i.langsw::after{content:"⇄";position:absolute;right:-9px;bottom:-7px;font-size:11px;background:var(--surface);color:var(--muted);border-radius:50%;width:15px;height:15px;display:grid;place-items:center;border:1px solid var(--line);transform:rotate(4deg)}
+:root[data-lang="fr"] .brand i{background:#1d4ed8;color:#fff}
 .gate{max-width:420px;margin:12vh auto 0;display:flex;flex-direction:column;gap:14px;text-align:center}
 .gate .in{text-align:center;font-size:22px;letter-spacing:.05em}
 .gate .err{color:var(--bad);font-weight:700;min-height:1.4em}
@@ -187,18 +190,30 @@ label.btn{user-select:none;-webkit-user-select:none}
 <script>
 (function(){
 "use strict";
-const KIDNAME = (function(){try{return localStorage.getItem("wortkasten.profil")||"profil"}catch(e){return "profil"}})();
 const PROFILES = {
-  emil:  {name:"Emil",  title:"Emils Wortkasten",  short:"Emils Wörter"},
-  paula: {name:"Paula", title:"Paulas Wortkasten", short:"Paulas Wörter"}
+  emil:  {name:"Emil",  title:"Emils Wortkasten",  short:"Emils Wörter", langs:["en","fr"]},
+  paula: {name:"Paula", title:"Paulas Wortkasten", short:"Paulas Wörter", langs:["en"]}
 };
+const LANGS = {
+  en: {code:"EN", name:"Englisch",    adj:"englisch",    voice:/en[-_]GB/i, voice2:/^en/i, tts:"en-GB", dir:"",    formsDir:"Grundform → Past-Formen"},
+  fr: {code:"FR", name:"Französisch", adj:"französisch", voice:/fr[-_]FR/i, voice2:/^fr/i, tts:"fr-FR", dir:"fr/", formsDir:"Grundform → Präsens-Formen"}
+};
+const PRON = ["je","tu","il/elle/on","nous","vous","ils/elles"];
 const PID_KEY = "wortkasten.profil";
 let PID = null; try{PID = localStorage.getItem(PID_KEY)}catch(e){}
 if(!PROFILES[PID]){ gate(); return; }
 const PROF = PROFILES[PID];
-const KEY = "wortkasten-"+PID+".v1";
+let LANG = "en"; try{LANG = localStorage.getItem("wortkasten."+PID+".lang")||"en"}catch(e){}
+if(!PROF.langs.includes(LANG)) LANG = PROF.langs[0];
+const L = LANGS[LANG], FR = LANG==="fr";
+const keyFor = lg=>"wortkasten-"+PID+(lg==="en"?"":"-"+lg)+".v1";
+const KEY = keyFor(LANG);
+/* Lerntage der anderen Sprachen zählen für die Flamme mit */
+const OTHER_DAYS = new Set();
+PROF.langs.filter(lg=>lg!==LANG).forEach(lg=>{try{const o=JSON.parse(localStorage.getItem(keyFor(lg))||"null");if(o&&o.log)o.log.forEach(e=>{const d=new Date(e.t);OTHER_DAYS.add(Math.floor((e.t-d.getTimezoneOffset()*60000)/864e5))})}catch(e){}});
 (function applyProfile(){
   document.documentElement.dataset.kid = PID;
+  document.documentElement.dataset.lang = LANG;
   document.title = PROF.title;
   const set=(sel,attr,val)=>{const el=document.head.querySelector(sel);if(el)el.setAttribute(attr,val)};
   set('meta[name="apple-mobile-web-app-title"]',"content",PROF.short);
@@ -219,7 +234,7 @@ function gate(){
     else document.getElementById("gate-err").textContent="Diesen Code gibt es nicht.";
   });
 }
-const MODES = [
+const MODES0 = [
   {id:"karte",    name:"Karteikarte",       dir:"Englisch → Deutsch", group:"leicht"},
   {id:"mc",       name:"Multiple Choice",   dir:"Englisch → Deutsch", group:"leicht"},
   {id:"paare",    name:"Paare zuordnen",    dir:"Englisch ↔ Deutsch", group:"leicht"},
@@ -230,6 +245,7 @@ const MODES = [
   {id:"satzbau",  name:"Satzbau",           dir:"Deutsch → Englisch", group:"schwer", needs:"satz"},
   {id:"formen",   name:"Formen eintippen",  dir:"Grundform → Past-Formen", group:"schwer", needs:"forms"}
 ];
+const MODES = MODES0.map(m=>Object.assign({},m,{dir:m.id==="formen"?L.formsDir:m.dir.replace("Englisch",L.name)}));
 const MODE = Object.fromEntries(MODES.map(m=>[m.id,m]));
 const LIGHT = ["karte","mc","paare"];
 const INTERVAL = [0,1,2,4,7,14];
@@ -246,6 +262,10 @@ const shuffle = a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor
 const alts = en=>String(en).split("/").map(s=>s.trim()).filter(Boolean);
 const norm = s=>String(s).toLowerCase().replace(/[’`´]/g,"'").replace(/[.,!?;:"„“”()]/g," ").replace(/\s+/g," ").trim();
 const splitForms = t=>String(t||"").split(/\s*[–-]\s*/).map(x=>x.trim()).filter(Boolean);
+const deacc = s=>String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/œ/g,"oe").replace(/æ/g,"ae");
+const ART_RE = /^(le |la |les |l'|un |une |des |du |de la |de l')/i;
+const stripArt = s=>String(s).replace(/[’`´]/g,"'").replace(ART_RE,"").trim();
+const stripPron = f=>String(f).replace(/[’`´]/g,"'").replace(/^(je |j'|tu |il\/elle\/on |nous |vous |ils\/elles )/i,"").trim();
 const escRe = s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 function lev(a,b){const m=a.length,n=b.length;const d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
 
@@ -262,6 +282,7 @@ function fix(o){o.lessons=o.lessons||[];if(!o.lessons.some(l=>l.id==="own"))o.le
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){storageOk=false}}
 
 let S = load();
+if(LANG!=="en"&&!S.pin){try{const b=JSON.parse(localStorage.getItem(keyFor("en"))||"null");if(b&&b.pin){S.pin=b.pin;S.perDay=b.perDay||S.perDay}}catch(e){}}
 let ui = {view:"home",ptab:"ueberblick",pin:"",pinFirst:null,pinMode:"enter",pinErr:false,
   lessonFilter:"all",editId:null,confirm:null,sess:null,toast:null,practice:{lesson:"all",mode:"mix"},photos:[],photoSent:false,photoErr:false,importLesson:null,importText:"",importName:"",preview:null,news:[]};
 
@@ -271,10 +292,17 @@ const lessonName = id=>(S.lessons.find(l=>l.id===id)||{name:"–"}).name;
 const hasSentence = w=>!!(w.sEn&&w.sDe&&w.sEn.trim().split(/\s+/).length>=3);
 function findTarget(w){
   if(!w.sEn) return null;
-  for(const a of alts(w.en)){
-    const t=a.replace(/^to\s+/i,"").trim(); if(!t) continue;
-    const m=w.sEn.match(new RegExp("(^|[^A-Za-z'])("+escRe(t)+")(?![A-Za-z])","i"));
-    if(m) return {start:m.index+m[1].length,text:m[2]};
+  let cands=alts(w.en).map(a=>a.replace(/^to\s+/i,"").trim());
+  if(FR){
+    const extra=[]; cands.forEach(a=>{const b=stripArt(a);if(b!==a)extra.push(b)});
+    (w.forms||[]).forEach(f=>extra.push(stripPron(f)));
+    cands=cands.concat(extra.sort((x,y)=>y.length-x.length));
+  }
+  const sent=w.sEn.replace(/[’`´]/g,"'");
+  for(const t of cands){
+    if(!t) continue;
+    const m=sent.match(new RegExp("(^|[^\\p{L}'])("+escRe(t.replace(/[’`´]/g,"'"))+")(?![\\p{L}])","iu"));
+    if(m) return {start:m.index+m[1].length,text:w.sEn.substr(m.index+m[1].length,m[2].length)};
   }
   return null;
 }
@@ -283,7 +311,7 @@ function available(w,mid){
   if(n==="satz") return hasSentence(w);
   if(n==="luecke") return !!findTarget(w);
   if(n==="tts") return hasTTS;
-  if(n==="forms") return Array.isArray(w.forms)&&w.forms.length>=3;
+  if(n==="forms") return Array.isArray(w.forms)&&w.forms.length>=(FR?6:3);
   return true;
 }
 const P = (wid,mid)=>(S.prog[wid]&&S.prog[wid][mid])||{box:0,due:0,r:0,f:0};
@@ -361,16 +389,16 @@ function buildPractice(){
   return spread(shuffle(items)).slice(0,15);
 }
 function streak(){
-  const days=new Set(S.log.map(e=>dayNum(e.t)));let d=today();if(!days.has(d))d--;let n=0;while(days.has(d)){n++;d--}return n;
+  const days=new Set(S.log.map(e=>dayNum(e.t)));OTHER_DAYS.forEach(x=>days.add(x));let d=today();if(!days.has(d))d--;let n=0;while(days.has(d)){n++;d--}return n;
 }
 
 /* ---------- speech ---------- */
 let voice=null;
-function pickVoice(){if(!hasTTS)return;const vs=speechSynthesis.getVoices();voice=vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}
+function pickVoice(){if(!hasTTS)return;const vs=speechSynthesis.getVoices();voice=vs.find(v=>L.voice.test(v.lang))||vs.find(v=>L.voice2.test(v.lang))||null}
 if(hasTTS){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}}
 function speak(text,rate){
   if(!hasTTS||!text)return;
-  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=voice?voice.lang:"en-GB";if(voice)u.voice=voice;u.rate=rate||0.9;speechSynthesis.speak(u)}catch(e){}
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=voice?voice.lang:L.tts;if(voice)u.voice=voice;u.rate=rate||0.9;speechSynthesis.speak(u)}catch(e){}
 }
 const sayBtn = t=>hasTTS?`<button class="icon" data-act="say" data-t="${esc(t)}" aria-label="Vorlesen">${SPEAK}</button>`:"";
 
@@ -399,12 +427,13 @@ function prep(){
     c.opts=shuffle([{text:w[key],ok:true}].concat(ds.map(t=>({text:t,ok:false}))));
   }
   if(it.m==="satzbau"){
-    c.target=w.sEn.trim().split(/\s+/);
+    c.target=w.sEn.trim().replace(/\s+([?!:;»])/g,"\u2060$1").replace(/(«)\s+/g,"$1\u2060").split(/\s+/);
     let order,tries=0;
     do{order=shuffle(c.target.map((_,i)=>i));tries++}while(tries<10&&order.every((v,i)=>c.target[v]===c.target[i]));
     c.pool=order; c.built=[];
   }
   if(it.m==="luecke") c.t=findTarget(w);
+  if(it.m==="formen"&&FR){const ix=shuffle([0,1,2,3,4,5]).slice(0,2).sort();c.fi=ix}
   if(it.m==="paare"){
     const group=[it];
     for(let j=s.i+1;j<s.items.length&&group.length<5;){
@@ -418,7 +447,7 @@ function prep(){
     Object.assign(c,{graded:ids,left:shuffle(all),right:shuffle(all),done:[],selL:null,selR:null,miss:[],wrong:null});
   }
   s.cur=c;
-  if(it.m==="hoeren") setTimeout(()=>speak(w.en),300);
+  if(it.m==="hoeren") setTimeout(()=>speak(alts(w.en)[0]),300);
 }
 function answer(ok,info,silent){
   const s=ui.sess,it=s.cur.item;
@@ -450,6 +479,10 @@ function checkTyped(inp,targets){
   const n=norm(inp); if(!n) return {ok:false,near:false};
   const vs=[]; targets.forEach(t=>{const x=norm(t);vs.push(x);if(x.startsWith("to "))vs.push(x.slice(3))});
   if(vs.includes(n)) return {ok:true};
+  if(FR){
+    if(vs.some(v=>deacc(v)===deacc(n))) return {ok:true,accent:true};
+    if(vs.some(v=>stripArt(v)!==v&&(stripArt(v)===n||deacc(stripArt(v))===deacc(n)))) return {ok:false,article:true};
+  }
   return {ok:false,near:vs.some(v=>v.length>=4&&lev(v,n)<=1)};
 }
 function check(){
@@ -463,14 +496,15 @@ function check(){
   if(it.m==="formen"){
     const a=document.getElementById("ans1"),b=document.getElementById("ans2");
     if(!a.value.trim()){a.focus();return} if(!b.value.trim()){b.focus();return}
-    const r1=checkTyped(a.value,w.forms[1].split("/")),r2=checkTyped(b.value,w.forms[2].split("/"));
+    const fi=s.cur.fi||[1,2], tg=i=>FR?[w.forms[i],stripPron(w.forms[i])]:w.forms[i].split("/");
+    const r1=checkTyped(a.value,tg(fi[0])),r2=checkTyped(b.value,tg(fi[1]));
     answer(r1.ok&&r2.ok,{g1:a.value,g2:b.value,near:!(r1.ok&&r2.ok)&&(r1.ok||r1.near)&&(r2.ok||r2.near)}); return;
   }
   const el=document.getElementById("ans"); const v=el?el.value:"";
   if(!v.trim()){if(el)el.focus();return}
   const targets=it.m==="luecke"?[s.cur.t.text]:alts(w.en);
   const r=checkTyped(v,targets);
-  answer(r.ok,{given:v,near:r.near});
+  answer(r.ok,{given:v,near:r.near,accent:r.accent,article:r.article});
 }
 
 /* ---------- stats ---------- */
@@ -498,7 +532,7 @@ function vHome(){
   const due=buildDaily().length, st=streak(), empty=!S.words.length;
   const lessons=S.lessons.filter(l=>!isBasis(l.id)).map(l=>{const ws=S.words.filter(w=>w.lesson===l.id);return {l,ws}}).filter(x=>x.ws.length);
   return `
-  <header class="top"><div class="brand"><i>EN</i>${esc(PROF.title)}</div><button class="btn ghost" data-act="go-lock">Eltern</button></header>
+  <header class="top"><div class="brand">${PROF.langs.length>1?`<i class="langsw" data-act="lang" role="button" aria-label="Sprache wechseln">${L.code}</i>`:`<i>${L.code}</i>`}${esc(PROF.title)}</div><button class="btn ghost" data-act="go-lock">Eltern</button></header>
   ${newsCard()}
   ${migrateCard()}
   ${storageOk?"":`<div class="warn">Dieser Browser blockiert das Speichern. Der Lernstand geht beim Schließen verloren.</div>`}
@@ -544,7 +578,7 @@ function basisCard(parent){
 
 const flame = n=>`<span class="flame" aria-label="${n} Tage Lernserie"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 3.2-1.2 5-2.9 6.9C7.4 10.8 6 12.7 6 15.3 6 18.9 8.7 22 12 22s6-2.8 6-6.5c0-2.4-1.1-4.2-2.3-5.6-.2 1.5-.9 2.7-2 3.3.4-3.6-.6-7.6-1.7-11.2z"/></svg>${n}</span>`;
 function migrateCard(){
-  if(S.log.length||S.migrateHidden) return "";
+  if(LANG!=="en"||S.log.length||S.migrateHidden) return "";
   return `<section class="card"><h3>Lernstand aus dem alten Trainer übernehmen</h3>
     <p class="small muted">Im alten Trainer: Eltern → Einstellungen → „Sicherungsdatei speichern“ → „In Dateien sichern“. Dann hier die Datei auswählen.</p>
     <div class="row"><label class="btn primary">Sicherungsdatei auswählen<input type="file" accept=".json,application/json,text/plain" data-file="migrate" hidden></label><button class="btn ghost" data-act="migrate-hide">Neu anfangen</button></div>
@@ -566,7 +600,7 @@ let lastSync=0;
 async function syncLessons(){
   if(Date.now()-lastSync<60000) return; lastSync=Date.now();
   let data;
-  try{const r=await fetch(PID+"/lektionen.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;data=await r.json()}catch(e){return}
+  try{const r=await fetch(PID+"/"+L.dir+"lektionen.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;data=await r.json()}catch(e){return}
   if(!data||!Array.isArray(data.lessons)||!data.lessons.length) return;
   const news=[]; let changed=false; const K=["en","de","sEn","sDe","forms"];
   for(const L of data.lessons){
@@ -630,16 +664,17 @@ function vLearn(){
       break;}
     case "formen":{
       const r=s.res||{};
-      body=`<div class="row"><div class="prompt">${esc(w.forms[0])}</div>${sayBtn(w.forms[0])}</div>
-        <p class="hint">${esc(w.en)} = ${esc(w.de)}<br>Schreib die beiden anderen Formen.</p>
+      const fi=c.fi||[1,2], lab=i=>FR?(i===0&&/^j'/i.test(w.forms[0])?"j'":PRON[i]):(i===1?"Simple Past":"Past Participle");
+      body=`<div class="row"><div class="prompt">${esc(FR?w.en:w.forms[0])}</div>${sayBtn(FR?w.en:w.forms[0])}</div>
+        <p class="hint">${esc(w.en)} = ${esc(w.de)}<br>${FR?"Schreib die beiden Präsens-Formen.":"Schreib die beiden anderen Formen."}</p>
         <form data-form="ans" class="stack">
-          <label class="f">Simple Past<input id="ans1" class="ans" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" ${done?"disabled":""} value="${done?esc(r.g1||""):""}"></label>
-          <label class="f">Past Participle<input id="ans2" class="ans" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" ${done?"disabled":""} value="${done?esc(r.g2||""):""}"></label>
+          <label class="f">${esc(lab(fi[0]))}<input id="ans1" class="ans" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" ${done?"disabled":""} value="${done?esc(r.g1||""):""}"></label>
+          <label class="f">${esc(lab(fi[1]))}<input id="ans2" class="ans" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" ${done?"disabled":""} value="${done?esc(r.g2||""):""}"></label>
           ${done?"":`<button class="btn primary wide" type="submit">Prüfen</button>`}
         </form>`;
       break;}
     case "satzbau":
-      body=`<div class="sent" style="font-weight:700">${esc(w.sDe)}</div><p class="hint">Bau den Satz auf Englisch. Tippe die Wörter in der richtigen Reihenfolge an.</p>
+      body=`<div class="sent" style="font-weight:700">${esc(w.sDe)}</div><p class="hint">Bau den Satz auf ${L.name}. Tippe die Wörter in der richtigen Reihenfolge an.</p>
         <div class="built">${c.built.map((ix,k)=>`<button class="tile" data-act="untile" data-k="${k}" ${done?"disabled":""}>${esc(c.target[ix])}</button>`).join("")||`<span class="muted small">Hier entsteht dein Satz</span>`}</div>
         <div class="pool">${c.pool.map((ix,k)=>`<button class="tile" data-act="tile" data-k="${k}">${esc(c.target[ix])}</button>`).join("")}</div>
         ${done?"":`<div class="row"><button class="btn" data-act="tile-reset" ${c.built.length?"":"disabled"}>Neu anfangen</button><button class="btn primary" style="flex:1" data-act="check" ${c.pool.length?"disabled":""}>Prüfen</button></div>`}`;
@@ -689,6 +724,8 @@ function feedback(){
       <b class="t">${r.ok?"Richtig!":r.near?"Knapp daneben":"Leider falsch"}</b>
       ${r.ok?"":`<span>Richtig ist: <b>${esc(solution)}</b></span>`}
       ${r.near?`<span>Achte auf die Schreibweise.</span>`:""}
+      ${r.accent?`<span>Achte auf die Akzente: <b>${esc(it.m==="luecke"?s.cur.t.text:alts(w.en)[0])}</b></span>`:""}
+      ${r.article?`<span>Der Artikel fehlt – lern ihn immer mit.</span>`:""}
       ${r.ok&&it.m==="formen"?`<span>${esc(w.forms.join(" – "))}</span>`:""}
       ${r.ok&&(it.m==="tippen"||it.m==="hoeren")?`<span>${esc(w.en)} = ${esc(w.de)}</span>`:""}
       ${ctx}
@@ -699,7 +736,7 @@ function feedback(){
 
 function vDone(){
   const s=ui.sess, pct=s.n?Math.round(100*s.ok/s.n):0, due=buildDaily().length;
-  return `<header class="top"><div class="brand"><i>EN</i>${esc(PROF.title)}</div></header>
+  return `<header class="top"><div class="brand"><i>${L.code}</i>${esc(PROF.title)}</div></header>
   <section class="card hero"><div class="eyebrow">Runde beendet</div><div class="big tnum">${s.ok} von ${s.n} richtig</div>
   <p>${pct>=80?"Starke Runde!":pct>=50?"Gut gemacht, dranbleiben!":"Die schweren Wörter kommen bald wieder – so lernst du sie."}</p>
   ${s.free?`<p class="muted small">Freies Üben: Die Fächer haben sich nicht verändert.</p>`:`<p class="muted small tnum">${s.up} Mal ein Fach weiter, ${s.down} Mal zurück in Fach 1.</p>`}</section>
@@ -728,14 +765,14 @@ function vOwn(){
   <h1>Meine Wörter</h1>
   <section class="card">
     <form data-form="own" class="stack">
-      <div class="grid2"><label class="f">Englisch<input id="ow-en" class="in" autocapitalize="off" autocorrect="off" spellcheck="false" required></label>
+      <div class="grid2"><label class="f">${L.name}<input id="ow-en" class="in" autocapitalize="off" autocorrect="off" spellcheck="false" required></label>
       <label class="f">Deutsch<input id="ow-de" class="in" required></label></div>
-      <label class="f">Beispielsatz Englisch (freiwillig)<input id="ow-sen" class="in" autocapitalize="sentences"></label>
+      <label class="f">Beispielsatz ${L.name} (freiwillig)<input id="ow-sen" class="in" autocapitalize="sentences"></label>
       <label class="f">Beispielsatz Deutsch (freiwillig)<input id="ow-sde" class="in"></label>
       <button class="btn primary" type="submit">Wort hinzufügen</button>
     </form>
     <details><summary>Ganze Liste einfügen</summary>
-      <div class="stack" style="margin-top:10px"><p class="small muted">Pro Zeile: Englisch ; Deutsch ; Satz Englisch ; Satz Deutsch. Die Sätze sind freiwillig.</p>
+      <div class="stack" style="margin-top:10px"><p class="small muted">Pro Zeile: ${L.name} ; Deutsch ; Satz ${L.name} ; Satz Deutsch. Die Sätze sind freiwillig.</p>
       <textarea id="ow-list" class="in" placeholder="to borrow ; ausleihen&#10;exhausted ; erschöpft ; I was exhausted. ; Ich war erschöpft."></textarea>
       <button class="btn" data-act="own-list">Liste übernehmen</button></div>
     </details>
@@ -801,7 +838,7 @@ function vParent(){
   if(ui.ptab==="vokabeln") body=pWords();
   if(ui.ptab==="neu") body=pAdd();
   if(ui.ptab==="einst") body=pSettings();
-  return `<header class="top"><div class="brand" style="font-size:20px"><i>EN</i>Eltern-Bereich</div><button class="btn ghost" data-act="parent-exit">Sperren</button></header>
+  return `<header class="top"><div class="brand" style="font-size:20px"><i>${L.code}</i>Eltern-Bereich</div><button class="btn ghost" data-act="parent-exit">Sperren</button></header>
   <nav class="tabs">${tabs.map(([k,n])=>`<button class="tab ${ui.ptab===k?"on":""}" data-act="ptab" data-t="${k}">${n}</button>`).join("")}</nav>
   ${body}`;
 }
@@ -855,8 +892,8 @@ function pWords(){
 function editForm(w){
   const armed=ui.confirm==="w:"+w.id;
   return `<section class="card"><h3>Vokabel bearbeiten</h3>
-    <div class="grid2"><label class="f">Englisch<input id="ed-en" class="in" value="${esc(w.en)}"></label><label class="f">Deutsch<input id="ed-de" class="in" value="${esc(w.de)}"></label></div>
-    <label class="f">Satz Englisch<input id="ed-sen" class="in" value="${esc(w.sEn)}"></label>
+    <div class="grid2"><label class="f">${L.name}<input id="ed-en" class="in" value="${esc(w.en)}"></label><label class="f">Deutsch<input id="ed-de" class="in" value="${esc(w.de)}"></label></div>
+    <label class="f">Satz ${L.name}<input id="ed-sen" class="in" value="${esc(w.sEn)}"></label>
     <label class="f">Satz Deutsch<input id="ed-sde" class="in" value="${esc(w.sDe)}"></label>
     <label class="f">Verbformen (nur unregelmäßige Verben)<input id="ed-forms" class="in" autocapitalize="off" autocorrect="off" value="${esc((w.forms||[]).join(" - "))}" placeholder="z. B. go - went - gone"></label>
     <label class="f">Lektion<select id="ed-lesson" class="in">${S.lessons.map(l=>`<option value="${l.id}" ${w.lesson===l.id?"selected":""}>${esc(l.name)}</option>`).join("")}</select></label>
@@ -885,7 +922,7 @@ function pAdd(){
     <label class="f">Lektion (für Zeilen ohne eigene Überschrift)<select id="im-lesson" class="in" data-change="im-lesson">${S.lessons.map(l=>`<option value="${l.id}" ${sel===l.id?"selected":""}>${esc(l.name)}</option>`).join("")}<option value="__new" ${sel==="__new"?"selected":""}>+ Neue Lektion…</option></select></label>
     ${sel==="__new"?`<label class="f">Name der neuen Lektion<input id="im-name" class="in" data-input="im-name" value="${esc(ui.importName)}" placeholder="z. B. Lighthouse 1 – S. 216–217"></label>`:""}
     <label class="f">Liste<textarea id="im-text" class="in" data-input="im-text" placeholder="# Lektion: Lighthouse 1 – S. 216–217&#10;to borrow ; (sich) ausleihen ; Can I borrow your pen? ; Kann ich mir deinen Stift ausleihen?&#10;reliable ; zuverlässig">${esc(ui.importText)}</textarea></label>
-    <p class="small muted">Pro Zeile eine Vokabel: <b>Englisch ; Deutsch ; Satz Englisch ; Satz Deutsch</b>. Die Sätze sind freiwillig, schalten aber die Satzmodi frei. Eine Zeile <b># Lektion: Name</b> startet eine eigene Lektion. Mehrere richtige Antworten mit „/“ trennen. Bei unregelmäßigen Verben als 5. Spalte die Formen: <b>go - went - gone</b>.</p>
+    <p class="small muted">Pro Zeile eine Vokabel: <b>${L.name} ; Deutsch ; Satz ${L.name} ; Satz Deutsch</b>. Die Sätze sind freiwillig, schalten aber die Satzmodi frei. Eine Zeile <b># Lektion: Name</b> startet eine eigene Lektion. Mehrere richtige Antworten mit „/“ trennen. Bei unregelmäßigen Verben als 5. Spalte die Formen: <b>go - went - gone</b>.</p>
     <div class="row"><span id="im-count" class="muted small">${countLabel()}</span><button class="btn primary" style="margin-left:auto" data-act="preview">Vorschau</button></div>
   </section>
   <section class="card"><h3>Lektionen</h3>
@@ -1007,7 +1044,7 @@ document.addEventListener("click",e=>{
     }
     case "own-list": {
       const el=document.getElementById("ow-list"); const n=addWords(parseList(el.value),"own","kind");
-      toast(n?`${n} Wörter hinzugefügt`:"Keine neuen Wörter erkannt. Format: Englisch ; Deutsch"); break;
+      toast(n?`${n} Wörter hinzugefügt`:`Keine neuen Wörter erkannt. Format: ${L.name} ; Deutsch`); break;
     }
     case "del-own": {
       const id=b.dataset.id;
@@ -1025,7 +1062,7 @@ document.addEventListener("click",e=>{
     case "ed-cancel": ui.editId=null; render(); break;
     case "ed-save": {
       const w=wordById(ui.editId); const v=id=>document.getElementById(id).value.trim();
-      if(!v("ed-en")||!v("ed-de")){toast("Englisch und Deutsch dürfen nicht leer sein.");break}
+      if(!v("ed-en")||!v("ed-de")){toast(`${L.name} und Deutsch dürfen nicht leer sein.`);break}
       Object.assign(w,{en:v("ed-en"),de:v("ed-de"),sEn:v("ed-sen"),sDe:v("ed-sde"),lesson:document.getElementById("ed-lesson").value,edited:true});
       {const fm=splitForms(v("ed-forms"));if(fm.length>=3)w.forms=fm.slice(0,3);else delete w.forms}
       ui.editId=null; save(); toast("Gespeichert"); break;
@@ -1037,7 +1074,7 @@ document.addEventListener("click",e=>{
     }
     case "preview": {
       const blocks=parseBlocks(ui.importText);
-      if(!blocks.length){toast("Keine Vokabeln erkannt. Format: Englisch ; Deutsch");break}
+      if(!blocks.length){toast(`Keine Vokabeln erkannt. Format: ${L.name} ; Deutsch`);break}
       const sel=ui.importLesson;
       if(sel==="__new"&&blocks.some(x=>!x.name)&&!ui.importName.trim()){toast("Bitte einen Namen für die neue Lektion eingeben.");break}
       blocks.forEach(x=>{
@@ -1093,6 +1130,10 @@ document.addEventListener("click",e=>{
       catch(err){toast("Der Code ist ungültig oder unvollständig.")}
       break;
     }
+    case "lang": {
+      const i=PROF.langs.indexOf(LANG), nx=PROF.langs[(i+1)%PROF.langs.length];
+      save(); try{localStorage.setItem("wortkasten."+PID+".lang",nx);sessionStorage.setItem("wk.langtoast",LANGS[nx].name)}catch(err){} location.reload(); break;
+    }
     case "migrate-hide": S.migrateHidden=1; save(); render(); break;
     case "logout": {
       if(ui.confirm!=="logout"){ui.confirm="logout";render();break}
@@ -1108,15 +1149,15 @@ document.addEventListener("click",e=>{
   }
 });
 /* ---------- Sicherungsdatei ---------- */
-function backupName(){const d=new Date(),z=n=>String(n).padStart(2,"0");return `wortkasten-${KIDNAME}-${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}.json`}
+function backupName(){const d=new Date(),z=n=>String(n).padStart(2,"0");return `wortkasten-${PID}${LANG==="en"?"":"-"+LANG}-${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}.json`}
 function saveBackupFile(){
-  const name=backupName(), file=new File([JSON.stringify(S)],name,{type:"application/json"});
+  const name=backupName(), file=new File([JSON.stringify(Object.assign({},S,{lang:LANG}))],name,{type:"application/json"});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:name}).then(()=>toast("Sicherungsdatei gespeichert"),err=>{if(!err||err.name!=="AbortError")download(file)});return}}catch(err){}
   download(file);
 }
 function download(file){const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=file.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);toast("Sicherungsdatei gespeichert")}
 function parseBackup(txt){txt=String(txt||"").trim();let o;try{o=JSON.parse(txt)}catch(e){o=JSON.parse(decodeURIComponent(escape(atob(txt))))}if(!o||!Array.isArray(o.words))throw 0;o.log=o.log||[];return o}
-function applyBackup(o,msg){S=fix(o);save();ui.pending=null;ui.confirm=null;lastSync=0;syncLessons();toast(msg)}
+function applyBackup(o,msg){if((o.lang||"en")!==LANG){toast(`Diese Sicherung ist für ${LANGS[o.lang]?LANGS[o.lang].name:"eine andere Sprache"}. Erst oben links die Sprache wechseln.`);ui.pending=null;render();return}S=fix(o);save();ui.pending=null;ui.confirm=null;lastSync=0;syncLessons();toast(msg)}
 document.addEventListener("change",async e=>{
   const k=e.target.dataset&&e.target.dataset.file; if(!k) return;
   const f=e.target.files&&e.target.files[0]; e.target.value=""; if(!f) return;
@@ -1173,6 +1214,7 @@ function pinDigit(d){
 }
 
 render();
+try{const t=sessionStorage.getItem("wk.langtoast");if(t){sessionStorage.removeItem("wk.langtoast");toast(t)}}catch(e){}
 syncLessons();
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)syncLessons()});
 })();

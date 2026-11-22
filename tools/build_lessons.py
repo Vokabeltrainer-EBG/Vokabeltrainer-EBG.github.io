@@ -41,8 +41,9 @@ def parse(path):
     return lessons
 
 def main():
-    for d in sorted(p for p in ROOT.iterdir() if (p / "lektionen").is_dir()):
-        print(d.name + ": ", end="")
+    dirs = sorted({p.parent for p in ROOT.rglob("lektionen") if p.is_dir() and ".git" not in p.parts and "tools" not in p.parts})
+    for d in dirs:
+        print(str(d.relative_to(ROOT)) + ": ", end="")
         build(d)
 
 def build(kdir):

@@ -1,0 +1,796 @@
+{
+ "version": 1,
+ "lessons": [
+  {
+   "id": "unite-1-s-134",
+   "name": "Unité 1 – S. 134",
+   "words": [
+    {
+     "id": "unite-1-s-134--joyeux-anniversaire",
+     "en": "Joyeux anniversaire !",
+     "de": "Herzlichen Glückwunsch zum Geburtstag!",
+     "sEn": "Joyeux anniversaire, Léa !",
+     "sDe": "Herzlichen Glückwunsch zum Geburtstag, Léa!"
+    },
+    {
+     "id": "unite-1-s-134--un-anniversaire",
+     "en": "un anniversaire",
+     "de": "ein Geburtstag",
+     "sEn": "Aujourd'hui, c'est mon anniversaire.",
+     "sDe": "Heute habe ich Geburtstag."
+    },
+    {
+     "id": "unite-1-s-134--le-printemps",
+     "en": "le printemps",
+     "de": "der Frühling",
+     "sEn": "J'adore la nature au printemps.",
+     "sDe": "Im Frühling liebe ich die Natur."
+    },
+    {
+     "id": "unite-1-s-134--l-ete",
+     "en": "l'été",
+     "de": "der Sommer",
+     "sEn": "Tu préfères l'été ou l'hiver ?",
+     "sDe": "Magst du lieber den Sommer oder den Winter?"
+    },
+    {
+     "id": "unite-1-s-134--l-automne",
+     "en": "l'automne",
+     "de": "der Herbst",
+     "sEn": "L'anniversaire d'Ali est en automne.",
+     "sDe": "Alis Geburtstag ist im Herbst."
+    },
+    {
+     "id": "unite-1-s-134--l-hiver",
+     "en": "l'hiver",
+     "de": "der Winter",
+     "sEn": "Je n'aime pas l'hiver !",
+     "sDe": "Ich mag den Winter nicht!"
+    },
+    {
+     "id": "unite-1-s-134--au-printemps",
+     "en": "au printemps",
+     "de": "im Frühling",
+     "sEn": "Mon anniversaire est au printemps.",
+     "sDe": "Mein Geburtstag ist im Frühling."
+    },
+    {
+     "id": "unite-1-s-134--en-ete",
+     "en": "en été",
+     "de": "im Sommer",
+     "sEn": "En été, on fait du camping.",
+     "sDe": "Im Sommer zelten wir."
+    },
+    {
+     "id": "unite-1-s-134--en-automne",
+     "en": "en automne",
+     "de": "im Herbst",
+     "sEn": "En automne, je joue au foot avec mon frère.",
+     "sDe": "Im Herbst spiele ich mit meinem Bruder Fußball."
+    },
+    {
+     "id": "unite-1-s-134--en-hiver",
+     "en": "en hiver",
+     "de": "im Winter",
+     "sEn": "En hiver, je reste à la maison.",
+     "sDe": "Im Winter bleibe ich zu Hause."
+    },
+    {
+     "id": "unite-1-s-134--c-est-quand",
+     "en": "C'est quand ?",
+     "de": "Wann ist das?",
+     "sEn": "C'est quand, ton anniversaire ?",
+     "sDe": "Wann hast du Geburtstag?"
+    },
+    {
+     "id": "unite-1-s-134--quand",
+     "en": "quand",
+     "de": "wann (Fragewort)",
+     "sEn": "On arrive quand ?",
+     "sDe": "Wann kommen wir an?"
+    },
+    {
+     "id": "unite-1-s-134--c-est-le",
+     "en": "c'est le",
+     "de": "der/das ist am …",
+     "sEn": "Mon anniversaire, c'est le premier mai.",
+     "sDe": "Ich habe am ersten Mai Geburtstag."
+    },
+    {
+     "id": "unite-1-s-134--premier",
+     "en": "premier / première",
+     "de": "erster, erste, erstes",
+     "sEn": "C'est le premier jour des vacances.",
+     "sDe": "Das ist der erste Ferientag."
+    },
+    {
+     "id": "unite-1-s-134--la-semaine",
+     "en": "la semaine",
+     "de": "die Woche",
+     "sEn": "Dans une semaine, c'est mon anniversaire.",
+     "sDe": "In einer Woche habe ich Geburtstag."
+    },
+    {
+     "id": "unite-1-s-134--repeter",
+     "en": "répéter",
+     "de": "wiederholen",
+     "sEn": "Répète la phrase, s'il te plaît.",
+     "sDe": "Wiederhole bitte den Satz.",
+     "forms": [
+      "je répète",
+      "tu répètes",
+      "il/elle/on répète",
+      "nous répétons",
+      "vous répétez",
+      "ils/elles répètent"
+     ]
+    },
+    {
+     "id": "unite-1-s-134--d-abord",
+     "en": "d'abord",
+     "de": "zuerst",
+     "sEn": "D'abord, je fais mes devoirs.",
+     "sDe": "Zuerst mache ich meine Hausaufgaben."
+    },
+    {
+     "id": "unite-1-s-134--apres",
+     "en": "après",
+     "de": "danach",
+     "sEn": "D'abord, on mange. Après, on chante.",
+     "sDe": "Zuerst essen wir. Danach singen wir."
+    },
+    {
+     "id": "unite-1-s-134--chanter",
+     "en": "chanter",
+     "de": "singen",
+     "sEn": "Tu chantes avec moi ?",
+     "sDe": "Singst du mit mir?",
+     "forms": [
+      "je chante",
+      "tu chantes",
+      "il/elle/on chante",
+      "nous chantons",
+      "vous chantez",
+      "ils/elles chantent"
+     ]
+    },
+    {
+     "id": "unite-1-s-134--le-mois",
+     "en": "le mois",
+     "de": "der Monat",
+     "sEn": "J'aime le mois de décembre.",
+     "sDe": "Ich mag den Dezember."
+    },
+    {
+     "id": "unite-1-s-134--faire-la-fete",
+     "en": "faire la fête",
+     "de": "feiern",
+     "sEn": "J'adore faire la fête avec mes copains.",
+     "sDe": "Ich feiere total gern mit meinen Freunden."
+    }
+   ]
+  },
+  {
+   "id": "unite-1-s-135",
+   "name": "Unité 1 – S. 135",
+   "words": [
+    {
+     "id": "unite-1-s-135--faire",
+     "en": "faire",
+     "de": "machen, tun",
+     "sEn": "On fait des pizzas !",
+     "sDe": "Wir machen Pizza!",
+     "forms": [
+      "je fais",
+      "tu fais",
+      "il/elle/on fait",
+      "nous faisons",
+      "vous faites",
+      "ils/elles font"
+     ]
+    },
+    {
+     "id": "unite-1-s-135--la-fete",
+     "en": "la fête",
+     "de": "die Feier, das Fest",
+     "sEn": "Vendredi, je fais une fête.",
+     "sDe": "Am Freitag mache ich eine Feier."
+    },
+    {
+     "id": "unite-1-s-135--lundi",
+     "en": "lundi",
+     "de": "Montag, am Montag",
+     "sEn": "Lundi, j'ai sport.",
+     "sDe": "Am Montag habe ich Sport."
+    },
+    {
+     "id": "unite-1-s-135--mardi",
+     "en": "mardi",
+     "de": "Dienstag, am Dienstag",
+     "sEn": "Mardi, je fais du basket.",
+     "sDe": "Am Dienstag spiele ich Basketball."
+    },
+    {
+     "id": "unite-1-s-135--mercredi",
+     "en": "mercredi",
+     "de": "Mittwoch, am Mittwoch",
+     "sEn": "Mercredi, je chante avec Lina.",
+     "sDe": "Am Mittwoch singe ich mit Lina."
+    },
+    {
+     "id": "unite-1-s-135--jeudi",
+     "en": "jeudi",
+     "de": "Donnerstag, am Donnerstag",
+     "sEn": "Jeudi, c'est l'anniversaire de Tom.",
+     "sDe": "Am Donnerstag hat Tom Geburtstag."
+    },
+    {
+     "id": "unite-1-s-135--vendredi",
+     "en": "vendredi",
+     "de": "Freitag, am Freitag",
+     "sEn": "Vendredi, on mange des pizzas.",
+     "sDe": "Am Freitag essen wir Pizza."
+    },
+    {
+     "id": "unite-1-s-135--samedi",
+     "en": "samedi",
+     "de": "Samstag, am Samstag",
+     "sEn": "Samedi, je fais du camping avec mon père.",
+     "sDe": "Am Samstag zelte ich mit meinem Vater."
+    },
+    {
+     "id": "unite-1-s-135--dimanche",
+     "en": "dimanche",
+     "de": "Sonntag, am Sonntag",
+     "sEn": "Pourquoi vous faites la fête dimanche ?",
+     "sDe": "Warum feiert ihr am Sonntag?"
+    },
+    {
+     "id": "unite-1-s-135--le-week-end",
+     "en": "le week-end",
+     "de": "das Wochenende",
+     "sEn": "Le week-end, je fais du sport.",
+     "sDe": "Am Wochenende mache ich Sport."
+    },
+    {
+     "id": "unite-1-s-135--une-invitation",
+     "en": "une invitation",
+     "de": "eine Einladung",
+     "sEn": "Merci pour ton invitation !",
+     "sDe": "Danke für deine Einladung!"
+    },
+    {
+     "id": "unite-1-s-135--je-t-invite",
+     "en": "je t'invite",
+     "de": "ich lade dich ein",
+     "sEn": "Je fais une fête et je t'invite !",
+     "sDe": "Ich mache eine Feier und lade dich ein!"
+    },
+    {
+     "id": "unite-1-s-135--inviter",
+     "en": "inviter",
+     "de": "einladen",
+     "sEn": "Tu invites Elif à ta fête ?",
+     "sDe": "Lädst du Elif zu deiner Feier ein?",
+     "forms": [
+      "j'invite",
+      "tu invites",
+      "il/elle/on invite",
+      "nous invitons",
+      "vous invitez",
+      "ils/elles invitent"
+     ]
+    },
+    {
+     "id": "unite-1-s-135--pourquoi",
+     "en": "pourquoi",
+     "de": "warum",
+     "sEn": "Pourquoi tu n'es pas là ?",
+     "sDe": "Warum bist du nicht da?"
+    },
+    {
+     "id": "unite-1-s-135--parce-que",
+     "en": "parce que",
+     "de": "weil",
+     "sEn": "Je fais une fête parce que c'est mon anniversaire.",
+     "sDe": "Ich mache eine Feier, weil ich Geburtstag habe."
+    },
+    {
+     "id": "unite-1-s-135--a-huit-heures",
+     "en": "à huit heures",
+     "de": "um acht Uhr",
+     "sEn": "C'est quand ? – C'est à huit heures.",
+     "sDe": "Wann ist das? – Um acht Uhr."
+    },
+    {
+     "id": "unite-1-s-135--faire-de-l-escalade",
+     "en": "faire de l'escalade",
+     "de": "klettern",
+     "sEn": "Mon frère adore faire de l'escalade.",
+     "sDe": "Mein Bruder klettert total gern."
+    },
+    {
+     "id": "unite-1-s-135--faire-de-la-trottinette",
+     "en": "faire de la trottinette",
+     "de": "Roller fahren, Scooter fahren",
+     "sEn": "Moi, j'adore faire de la trottinette !",
+     "sDe": "Ich fahre total gern Roller!"
+    },
+    {
+     "id": "unite-1-s-135--faire-du-camping",
+     "en": "faire du camping",
+     "de": "zelten",
+     "sEn": "Je n'aime pas faire du camping.",
+     "sDe": "Ich zelte nicht gern."
+    },
+    {
+     "id": "unite-1-s-135--faire-du-sport",
+     "en": "faire du sport",
+     "de": "Sport machen",
+     "sEn": "Vous aimez faire du sport ?",
+     "sDe": "Macht ihr gern Sport?"
+    },
+    {
+     "id": "unite-1-s-135--le-salon",
+     "en": "le salon",
+     "de": "das Wohnzimmer",
+     "sEn": "Ma chambre est derrière le salon.",
+     "sDe": "Mein Zimmer ist hinter dem Wohnzimmer."
+    },
+    {
+     "id": "unite-1-s-135--apporter",
+     "en": "apporter",
+     "de": "mitbringen",
+     "sEn": "Apportez une salade.",
+     "sDe": "Bringt einen Salat mit.",
+     "forms": [
+      "j'apporte",
+      "tu apportes",
+      "il/elle/on apporte",
+      "nous apportons",
+      "vous apportez",
+      "ils/elles apportent"
+     ]
+    },
+    {
+     "id": "unite-1-s-135--les-vetements-de-sport",
+     "en": "les vêtements de sport",
+     "de": "die Sportkleidung",
+     "sEn": "Apporte tes vêtements de sport.",
+     "sDe": "Bring deine Sportkleidung mit."
+    },
+    {
+     "id": "unite-1-s-135--le-sac-de-couchage",
+     "en": "le sac de couchage",
+     "de": "der Schlafsack",
+     "sEn": "Où est mon sac de couchage ?",
+     "sDe": "Wo ist mein Schlafsack?"
+    },
+    {
+     "id": "unite-1-s-135--le-cadeau",
+     "en": "le cadeau",
+     "de": "das Geschenk (Plural: les cadeaux)",
+     "sEn": "Merci pour le cadeau !",
+     "sDe": "Danke für das Geschenk!"
+    },
+    {
+     "id": "unite-1-s-135--je-compte-sur-toi",
+     "en": "Je compte sur toi.",
+     "de": "Ich zähle auf dich.",
+     "sEn": "Je fais une fête et je compte sur toi.",
+     "sDe": "Ich mache eine Feier und zähle auf dich."
+    }
+   ]
+  },
+  {
+   "id": "unite-1-s-136-137",
+   "name": "Unité 1 – S. 136–137",
+   "words": [
+    {
+     "id": "unite-1-s-136-137--moi",
+     "en": "moi",
+     "de": "ich (betont)",
+     "sEn": "C'est moi !",
+     "sDe": "Das bin ich!"
+    },
+    {
+     "id": "unite-1-s-136-137--toi",
+     "en": "toi",
+     "de": "du (betont)",
+     "sEn": "J'adore le foot. Et toi ?",
+     "sDe": "Ich liebe Fußball. Und du?"
+    },
+    {
+     "id": "unite-1-s-136-137--acheter",
+     "en": "acheter",
+     "de": "kaufen",
+     "sEn": "Elle achète un maillot de foot.",
+     "sDe": "Sie kauft ein Fußballtrikot.",
+     "forms": [
+      "j'achète",
+      "tu achètes",
+      "il/elle/on achète",
+      "nous achetons",
+      "vous achetez",
+      "ils/elles achètent"
+     ]
+    },
+    {
+     "id": "unite-1-s-136-137--comme",
+     "en": "comme",
+     "de": "als",
+     "sEn": "Comme cadeau, on achète un poster.",
+     "sDe": "Als Geschenk kaufen wir ein Poster."
+    },
+    {
+     "id": "unite-1-s-136-137--on-pourrait",
+     "en": "on pourrait",
+     "de": "wir könnten, man könnte",
+     "sEn": "On pourrait faire un gâteau ensemble.",
+     "sDe": "Wir könnten zusammen einen Kuchen backen."
+    },
+    {
+     "id": "unite-1-s-136-137--une-idee",
+     "en": "une idée",
+     "de": "eine Idee",
+     "sEn": "J'ai une idée !",
+     "sDe": "Ich habe eine Idee!"
+    },
+    {
+     "id": "unite-1-s-136-137--le-gateau",
+     "en": "le gâteau",
+     "de": "der Kuchen, der Keks (Plural: les gâteaux)",
+     "sEn": "Le gâteau de ma grand-mère est super.",
+     "sDe": "Der Kuchen meiner Oma ist super."
+    },
+    {
+     "id": "unite-1-s-136-137--le-gateau-au-chocolat",
+     "en": "le gâteau au chocolat",
+     "de": "der Schokoladenkuchen",
+     "sEn": "J'adore le gâteau au chocolat.",
+     "sDe": "Ich liebe Schokoladenkuchen."
+    },
+    {
+     "id": "unite-1-s-136-137--le-maillot",
+     "en": "le maillot",
+     "de": "das Trikot, der Badeanzug, die Badehose",
+     "sEn": "Mon maillot est bleu et blanc.",
+     "sDe": "Mein Trikot ist blau-weiß."
+    },
+    {
+     "id": "unite-1-s-136-137--ca-coute-combien",
+     "en": "Ça coûte combien ?",
+     "de": "Wie viel kostet das?",
+     "sEn": "Le poster est super. Ça coûte combien ?",
+     "sDe": "Das Poster ist super. Wie viel kostet das?"
+    },
+    {
+     "id": "unite-1-s-136-137--couter",
+     "en": "coûter",
+     "de": "kosten",
+     "sEn": "Le livre coûte combien ?",
+     "sDe": "Wie viel kostet das Buch?",
+     "forms": [
+      "je coûte",
+      "tu coûtes",
+      "il/elle/on coûte",
+      "nous coûtons",
+      "vous coûtez",
+      "ils/elles coûtent"
+     ]
+    },
+    {
+     "id": "unite-1-s-136-137--combien",
+     "en": "combien",
+     "de": "wie viel",
+     "sEn": "Tu as combien de cadeaux ?",
+     "sDe": "Wie viele Geschenke hast du?"
+    },
+    {
+     "id": "unite-1-s-136-137--un-euro",
+     "en": "un euro",
+     "de": "ein Euro",
+     "sEn": "Le stylo coûte un euro.",
+     "sDe": "Der Stift kostet einen Euro."
+    },
+    {
+     "id": "unite-1-s-136-137--c-est-trop-cher",
+     "en": "C'est trop cher !",
+     "de": "Das ist zu teuer!",
+     "sEn": "Cinquante euros ? C'est trop cher !",
+     "sDe": "Fünfzig Euro? Das ist zu teuer!"
+    },
+    {
+     "id": "unite-1-s-136-137--trop",
+     "en": "trop",
+     "de": "zu, zu sehr",
+     "sEn": "Le maillot est trop cher.",
+     "sDe": "Das Trikot ist zu teuer."
+    },
+    {
+     "id": "unite-1-s-136-137--je-trouve-que",
+     "en": "je trouve que",
+     "de": "ich finde, dass",
+     "sEn": "Je trouve que ton look est super.",
+     "sDe": "Ich finde, dass dein Look super ist."
+    },
+    {
+     "id": "unite-1-s-136-137--trouver",
+     "en": "trouver",
+     "de": "finden",
+     "sEn": "Je ne trouve pas mon stylo.",
+     "sDe": "Ich finde meinen Stift nicht.",
+     "forms": [
+      "je trouve",
+      "tu trouves",
+      "il/elle/on trouve",
+      "nous trouvons",
+      "vous trouvez",
+      "ils/elles trouvent"
+     ]
+    },
+    {
+     "id": "unite-1-s-136-137--appeler",
+     "en": "appeler",
+     "de": "anrufen",
+     "sEn": "Gabin appelle ses copains.",
+     "sDe": "Gabin ruft seine Freunde an.",
+     "forms": [
+      "j'appelle",
+      "tu appelles",
+      "il/elle/on appelle",
+      "nous appelons",
+      "vous appelez",
+      "ils/elles appellent"
+     ]
+    },
+    {
+     "id": "unite-1-s-136-137--peut-etre",
+     "en": "peut-être",
+     "de": "vielleicht",
+     "sEn": "Tu as peut-être une idée ?",
+     "sDe": "Hast du vielleicht eine Idee?"
+    },
+    {
+     "id": "unite-1-s-136-137--ca-marche",
+     "en": "Ça marche !",
+     "de": "Geht klar!, Okay!",
+     "sEn": "On fait un gâteau ? – Ça marche !",
+     "sDe": "Backen wir einen Kuchen? – Geht klar!"
+    }
+   ]
+  },
+  {
+   "id": "module-a-s-138-139",
+   "name": "Module A – S. 138–139",
+   "words": [
+    {
+     "id": "module-a-s-138-139--le-corres",
+     "en": "le corres / la corres",
+     "de": "der Brieffreund, die Brieffreundin",
+     "sEn": "Ma corres habite à Lyon.",
+     "sDe": "Meine Brieffreundin wohnt in Lyon."
+    },
+    {
+     "id": "module-a-s-138-139--petit",
+     "en": "petit / petite",
+     "de": "klein",
+     "sEn": "Mon frère est petit.",
+     "sDe": "Mein Bruder ist klein."
+    },
+    {
+     "id": "module-a-s-138-139--noir",
+     "en": "noir / noire",
+     "de": "schwarz",
+     "sEn": "Le chat est noir.",
+     "sDe": "Die Katze ist schwarz."
+    },
+    {
+     "id": "module-a-s-138-139--moche",
+     "en": "moche",
+     "de": "hässlich",
+     "sEn": "Mon bureau est moche.",
+     "sDe": "Mein Schreibtisch ist hässlich."
+    },
+    {
+     "id": "module-a-s-138-139--triste",
+     "en": "triste",
+     "de": "traurig",
+     "sEn": "Ça ne va pas ? Tu es triste ?",
+     "sDe": "Geht es dir nicht gut? Bist du traurig?"
+    },
+    {
+     "id": "module-a-s-138-139--blanc",
+     "en": "blanc / blanche",
+     "de": "weiß",
+     "sEn": "Ma chambre est blanche.",
+     "sDe": "Mein Zimmer ist weiß."
+    },
+    {
+     "id": "module-a-s-138-139--joli",
+     "en": "joli / jolie",
+     "de": "hübsch",
+     "sEn": "Ta chambre est jolie.",
+     "sDe": "Dein Zimmer ist hübsch."
+    },
+    {
+     "id": "module-a-s-138-139--drole",
+     "en": "drôle",
+     "de": "lustig",
+     "sEn": "Mon père est très drôle.",
+     "sDe": "Mein Vater ist sehr lustig."
+    },
+    {
+     "id": "module-a-s-138-139--grand",
+     "en": "grand / grande",
+     "de": "groß",
+     "sEn": "Ma sœur est grande.",
+     "sDe": "Meine Schwester ist groß."
+    },
+    {
+     "id": "module-a-s-138-139--quand",
+     "en": "quand",
+     "de": "wenn, immer wenn",
+     "sEn": "Quand ma mère est là, on rigole bien.",
+     "sDe": "Wenn meine Mutter da ist, lachen wir viel."
+    },
+    {
+     "id": "module-a-s-138-139--rigoler",
+     "en": "rigoler",
+     "de": "lachen, Spaß haben",
+     "sEn": "Avec mes copains, on rigole souvent.",
+     "sDe": "Mit meinen Freunden lachen wir oft.",
+     "forms": [
+      "je rigole",
+      "tu rigoles",
+      "il/elle/on rigole",
+      "nous rigolons",
+      "vous rigolez",
+      "ils/elles rigolent"
+     ]
+    },
+    {
+     "id": "module-a-s-138-139--bien",
+     "en": "bien",
+     "de": "gut",
+     "sEn": "C'est bien.",
+     "sDe": "Das ist gut."
+    },
+    {
+     "id": "module-a-s-138-139--rigoler-bien",
+     "en": "rigoler bien",
+     "de": "viel lachen, echt Spaß haben",
+     "sEn": "Avec mon frère, je rigole bien.",
+     "sDe": "Mit meinem Bruder habe ich echt Spaß."
+    },
+    {
+     "id": "module-a-s-138-139--tres",
+     "en": "très",
+     "de": "sehr",
+     "sEn": "Elle est très sympa.",
+     "sDe": "Sie ist sehr nett."
+    },
+    {
+     "id": "module-a-s-138-139--sportif",
+     "en": "sportif / sportive",
+     "de": "sportlich",
+     "sEn": "Mon père est très sportif.",
+     "sDe": "Mein Vater ist sehr sportlich."
+    },
+    {
+     "id": "module-a-s-138-139--le-tennis",
+     "en": "le tennis",
+     "de": "Tennis",
+     "sEn": "Le tennis, c'est mon sport préféré.",
+     "sDe": "Tennis ist mein Lieblingssport."
+    },
+    {
+     "id": "module-a-s-138-139--je-n-ai-pas-le-temps",
+     "en": "Je n'ai pas le temps.",
+     "de": "Ich habe keine Zeit.",
+     "sEn": "Je voudrais faire du basket, mais je n'ai pas le temps.",
+     "sDe": "Ich würde gern Basketball spielen, aber ich habe keine Zeit."
+    },
+    {
+     "id": "module-a-s-138-139--le-temps",
+     "en": "le temps",
+     "de": "die Zeit",
+     "sEn": "Tu as le temps samedi ?",
+     "sDe": "Hast du am Samstag Zeit?"
+    },
+    {
+     "id": "module-a-s-138-139--prefere",
+     "en": "préféré / préférée",
+     "de": "Lieblings-",
+     "sEn": "Le foot, c'est mon sport préféré.",
+     "sDe": "Fußball ist mein Lieblingssport."
+    },
+    {
+     "id": "module-a-s-138-139--le-repas",
+     "en": "le repas",
+     "de": "das Essen, die Mahlzeit",
+     "sEn": "Le repas est très bon.",
+     "sDe": "Das Essen ist sehr gut."
+    },
+    {
+     "id": "module-a-s-138-139--vegetarien",
+     "en": "végétarien / végétarienne",
+     "de": "vegetarisch",
+     "sEn": "Ma demi-sœur est végétarienne.",
+     "sDe": "Meine Halbschwester ist Vegetarierin."
+    },
+    {
+     "id": "module-a-s-138-139--le-look",
+     "en": "le look",
+     "de": "der Look, das Outfit",
+     "sEn": "J'aime ton look.",
+     "sDe": "Ich mag deinen Look."
+    },
+    {
+     "id": "module-a-s-138-139--porter",
+     "en": "porter",
+     "de": "tragen",
+     "sEn": "Aujourd'hui, je porte un maillot de foot.",
+     "sDe": "Heute trage ich ein Fußballtrikot.",
+     "forms": [
+      "je porte",
+      "tu portes",
+      "il/elle/on porte",
+      "nous portons",
+      "vous portez",
+      "ils/elles portent"
+     ]
+    },
+    {
+     "id": "module-a-s-138-139--les-lunettes",
+     "en": "les lunettes",
+     "de": "die Brille",
+     "sEn": "Mes lunettes sont rouges.",
+     "sDe": "Meine Brille ist rot."
+    },
+    {
+     "id": "module-a-s-138-139--vert",
+     "en": "vert / verte",
+     "de": "grün",
+     "sEn": "Mon sac est vert.",
+     "sDe": "Meine Tasche ist grün."
+    },
+    {
+     "id": "module-a-s-138-139--un-appareil-dentaire",
+     "en": "un appareil dentaire",
+     "de": "eine Zahnspange",
+     "sEn": "Lily a un appareil dentaire.",
+     "sDe": "Lily hat eine Zahnspange."
+    },
+    {
+     "id": "module-a-s-138-139--depuis",
+     "en": "depuis",
+     "de": "seit",
+     "sEn": "Elle est végétarienne depuis un mois.",
+     "sDe": "Sie ist seit einem Monat Vegetarierin."
+    },
+    {
+     "id": "module-a-s-138-139--le-caractere",
+     "en": "le caractère",
+     "de": "der Charakter",
+     "sEn": "Mon chien a un bon caractère.",
+     "sDe": "Mein Hund hat einen guten Charakter."
+    },
+    {
+     "id": "module-a-s-138-139--timide",
+     "en": "timide",
+     "de": "schüchtern",
+     "sEn": "Son frère est très timide.",
+     "sDe": "Sein Bruder ist sehr schüchtern."
+    },
+    {
+     "id": "module-a-s-138-139--sympa",
+     "en": "sympa",
+     "de": "nett, sympathisch (unveränderlich)",
+     "sEn": "Mes parents sont sympa.",
+     "sDe": "Meine Eltern sind nett."
+    }
+   ]
+  }
+ ]
+}

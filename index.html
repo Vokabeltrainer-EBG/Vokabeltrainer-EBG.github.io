@@ -72,6 +72,41 @@ textarea.in[data-tans]{min-height:64px}
 .tq2{color:var(--muted);font-size:14px}
 @media (max-width:640px){.ttab,.tpair{grid-template-columns:1fr}.trow{grid-template-columns:1fr 1fr}}
 .g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.notebadge{font-size:22px;font-weight:800;border:2px solid var(--ink);border-radius:12px;padding:4px 12px}
+#printarea{background:#fff;color:#000;border-radius:8px}
+.psheet{font-family:var(--f-body);color:#000;background:#fff;padding:24px 28px;font-size:15px;line-height:1.4}
+.psheet small{color:#000}
+.phead{display:flex;justify-content:space-between;gap:12px;border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px;font-size:14px}
+.phead b{font-size:18px}
+.pname{display:flex;gap:24px;margin:6px 0 14px}.pname span{flex:1;display:flex;gap:6px;align-items:flex-end}
+.pl{flex:1;display:inline-block;border-bottom:1px solid #000;min-width:120px;height:1.1em}
+.pl2{flex:none;width:9em;margin:0 4px}
+.psec{margin:16px 0;break-inside:avoid}
+.ph{display:flex;justify-content:space-between;gap:12px;margin-bottom:6px}.ph span{white-space:nowrap}
+.ptab{width:100%;border-collapse:collapse}
+.ptab td{border-bottom:1px solid #000;height:30px;padding:2px 6px;vertical-align:bottom;width:50%}
+.ptab tr td:first-child{border-right:1px solid #000}
+.ptab .pp{float:left}
+.ppair{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.pbox{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid #000;border-radius:14px;padding:6px 10px;margin:5px 0;min-height:34px}
+.pbox b{display:grid;place-items:center;width:24px;height:24px;border:1.5px solid #000;border-radius:50%;flex:none;font-size:13px}
+.ppair>div:last-child .pbox{flex-direction:row}
+.pgap{margin:8px 0}
+.psent{margin:10px 0}.pl3{border-bottom:1px solid #000;height:28px}
+.ptotal{display:flex;justify-content:flex-end;gap:40px;margin-top:18px;font-weight:700}
+.pscale{font-size:12px;text-align:right}
+.psol{margin:4px 0 0 26px;padding:0}.psol li{margin:3px 0}
+.pbreak{border-top:1px dashed #999;margin-top:12px}
+@media print{
+  @page{size:A4;margin:12mm}
+  html,body{background:#fff!important}
+  .noprint,.toast{display:none!important}
+  .wrap{max-width:none!important;padding:0!important;margin:0!important}
+  #printarea{border-radius:0}
+  .psheet{padding:0}
+  .pbreak{break-before:page;border:0;margin:0}
+}
+body.printdoc{background:#fff}
 .gate{max-width:420px;margin:12vh auto 0;display:flex;flex-direction:column;gap:14px;text-align:center}
 .gate .in{text-align:center;font-size:22px;letter-spacing:.05em}
 .gate .err{color:var(--bad);font-weight:700;min-height:1.4em}
@@ -1106,7 +1141,7 @@ function vTestSetup(){
     <p class="small muted">${n} Wörter ausgewählt${n&&n<6?" – mindestens 6 nötig":""}</p>
     <button class="btn primary wide" data-act="test-start" ${n>=6?"":"disabled"}>Test starten</button>
   </section>
-  ${past.length?`<section class="card"><h3>Letzte Tests</h3>${past.map(t=>`<button class="btn ghost wide rowbtn" data-act="test-open" data-id="${t.id}"><span>${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}</span><b class="tnum">${t.score}/${t.max}${t.open?" *":""}</b></button>`).join("")}${past.some(t=>t.open)?`<p class="small muted">* wird noch von deinen Eltern geprüft</p>`:""}</section>`:""}`;
+  ${past.length?`<section class="card"><h3>Letzte Tests</h3>${past.map(t=>`<button class="btn ghost wide rowbtn" data-act="test-open" data-id="${t.id}"><span>${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}</span><b class="tnum">${t.score}/${t.max} · ${note(t.score,t.max)}${t.open?" *":""}</b></button>`).join("")}${past.some(t=>t.open)?`<p class="small muted">* wird noch von deinen Eltern geprüft</p>`:""}</section>`:""}`;
 }
 function tin(i,ph,wide){const v=(ui.test.ans||{})[i]||"";return `<input class="in tin" data-tans="${i}" value="${esc(v)}" placeholder="${esc(ph||"")}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${wide?'style="width:100%"':""}>`}
 function vTest(){
@@ -1144,7 +1179,7 @@ function testItemRow(x,i,parent,tid){
 }
 function testBody(t,parent){
   const pct=t.max?Math.round(100*t.score/t.max):0;
-  let h=`<section class="card"><div class="tnum" style="font-size:30px;font-weight:800">${t.score} von ${t.max} Punkten</div><p class="muted">${pct} % · ${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}</p>
+  let h=`<section class="card"><div class="row" style="justify-content:space-between;align-items:center"><div class="tnum" style="font-size:30px;font-weight:800">${t.score} von ${t.max} Punkten</div><div class="notebadge">Note ${note(t.score,t.max)}${t.open?"*":""}</div></div><p class="muted">${pct} % · ${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}</p>
   ${t.open?`<p class="small">${parent?`${t.open} Antworten bitte prüfen (eigene Sätze und knappe Schreibweisen).`:`Deine Eltern prüfen noch ${t.open} ${t.open===1?"Antwort":"Antworten"}. Die Punktzahl kann sich noch ändern.`}</p>`:""}</section>`;
   let no=1;
   for(const k of TEST_ORDER){
@@ -1165,7 +1200,70 @@ function pTests(){
   const ts=(S.tests||[]).slice().reverse();
   if(ui.ptest){const t=ts.find(x=>x.id===ui.ptest);if(t)return `<button class="btn ghost" data-act="ptest" data-id="">← Alle Tests</button>${testBody(t,true)}
     <button class="btn ${ui.confirm==="tst-del"?"danger armed":""}" data-act="tst-del" data-id="${t.id}">${ui.confirm==="tst-del"?"Wirklich löschen?":"Test löschen"}</button>`}
-  return `<section class="card"><h3>Vokabeltests</h3>${ts.length?ts.map(t=>`<button class="btn ghost wide rowbtn" data-act="ptest" data-id="${t.id}"><span>${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}${t.open?` · <b>${t.open} prüfen</b>`:""}</span><b class="tnum">${t.score}/${t.max}</b></button>`).join(""):`<p class="muted">Noch keine Tests geschrieben.</p>`}</section>`;
+  return `<section class="card"><h3>Vokabeltests</h3>${ts.length?ts.map(t=>`<button class="btn ghost wide rowbtn" data-act="ptest" data-id="${t.id}"><span>${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}${t.open?` · <b>${t.open} prüfen</b>`:""}</span><b class="tnum">${t.score}/${t.max} · Note ${note(t.score,t.max)}</b></button>`).join(""):`<p class="muted">Noch keine Tests geschrieben.</p>`}</section>
+  <section class="card"><h3>Test zum Ausdrucken</h3><p class="small muted">Buchseiten wählen. Du bekommst ein Testblatt und ein Lösungsblatt in Schwarz-Weiß.</p>
+    <div class="stack">${testLessons().map((l,i,ls)=>`${isBasis(l.id)&&!isBasis((ls[i-1]||{}).id)?`<div class="eyebrow" style="margin-top:8px">Grundwortschatz</div>`:""}<label class="chk"><input type="checkbox" data-tsel="${l.id}" ${(ui.testSel||[]).includes(l.id)?"checked":""}> <span>${esc(l.name)}</span></label>`).join("")}</div>
+    <button class="btn primary wide" data-act="print-make" ${S.words.filter(w=>(ui.testSel||[]).includes(w.lesson)&&w.de&&w.en).length>=6?"":"disabled"}>Druckversion erstellen</button></section>
+  <section class="card"><h3>Notenschlüssel</h3><p class="small muted">Prozent der Punkte, ab denen eine Note gilt.</p>
+    <div class="grid2">${scale().map((x,i)=>`<label class="f">Note ${i+1} ab %<input id="sc-${i}" class="in" type="number" inputmode="decimal" min="0" max="100" step="0.5" value="${x}"></label>`).join("")}</div>
+    <div class="row"><button class="btn" data-act="scale-save">Speichern</button><button class="btn ghost" data-act="scale-reset">Standard</button></div></section>`;
+}
+
+/* ---------- Noten & Druckversion ---------- */
+const DEF_SCALE=[87.5,75,62.5,50,25];
+const scale=()=>Array.isArray(S.gradeScale)&&S.gradeScale.length===5?S.gradeScale:DEF_SCALE;
+function note(score,max){if(!max)return "–";const p=100*score/max;const sc=scale();for(let i=0;i<5;i++)if(p>=sc[i]-1e-9)return String(i+1);return "6"}
+function scaleText(max){const sc=scale();return sc.map((x,i)=>`${i+1}: ab ${String(Math.ceil(max*x/100*2)/2).replace(".",",")}`).join(" · ")+` · 6: darunter`}
+function vPrint(){
+  const t=ui.printTest; if(!t) return pTests();
+  const xs=k=>t.items.map((x,i)=>[x,i]).filter(([x])=>x.k===k);
+  const line=`<span class="pl"></span>`;
+  let no=1, sheet=`<div class="psheet">
+    <div class="phead"><div><b>Vokabeltest</b> · ${esc(L.name)}</div><div>${esc(t.lessons.join(" · "))}</div></div>
+    <div class="pname"><span>Name: ${line}</span><span>Datum: ${line}</span></div>`;
+  for(const k of TEST_ORDER){
+    const it=xs(k); if(!it.length) continue;
+    sheet+=`<div class="psec"><div class="ph"><b>${no++}. ${esc(TEST_SEC[k])}</b><span>___ / ${it.length}</span></div>`;
+    if(k==="tr") sheet+=`<table class="ptab">${it.map(([x])=>x.dir==="fg"?`<tr><td>${esc(x.q)}</td><td></td></tr>`:`<tr><td></td><td>${esc(x.q)}</td></tr>`).join("")}</table>`;
+    if(k==="forms") sheet+=`<table class="ptab">${it.map(([x])=>FR?`<tr><td>${esc(x.q)}</td><td><span class="pp">${esc(x.lab)}</span></td></tr>`:`<tr><td>${esc(x.q)}</td><td></td><td></td></tr>`).join("")}</table>`;
+    if(k==="pair"){const R=it.slice().sort((a,b)=>a[0].rpos-b[0].rpos);
+      sheet+=`<div class="ppair"><div>${it.map(([x])=>`<div class="pbox">${esc(x.q)}<b>${x.letter}</b></div>`).join("")}</div><div>${R.map(([x])=>`<div class="pbox"><b></b>${esc(x.fg)}</div>`).join("")}</div></div>`;}
+    if(k==="gap") sheet+=it.map(([x])=>`<p class="pgap">${esc(x.before)}<span class="pl pl2"></span>${esc(x.after)}<br><small>(${esc(x.hint)})</small></p>`).join("");
+    if(k==="sent") sheet+=it.map(([x])=>`<div class="psent">${esc(x.q)}<div class="pl3"></div><div class="pl3"></div></div>`).join("");
+    sheet+=`</div>`;
+  }
+  sheet+=`<div class="ptotal"><span>Gesamt: ___ / ${t.items.length}</span><span>Note: ______</span></div>
+    <p class="pscale">Notenschlüssel: ${esc(scaleText(t.items.length))}</p></div>`;
+  let sol=`<div class="psheet pbreak"><div class="phead"><div><b>Lösungen</b> · Vokabeltest ${esc(L.name)}</div><div>${esc(t.lessons.join(" · "))}</div></div>`;
+  no=1;
+  for(const k of TEST_ORDER){
+    const it=xs(k); if(!it.length) continue;
+    sol+=`<div class="psec"><div class="ph"><b>${no++}. ${esc(TEST_SEC[k])}</b></div><ol class="psol">`;
+    it.forEach(([x])=>{
+      const w=wordById(x.wid);
+      let a=k==="tr"?(x.dir==="fg"?`${x.q} – <b>${esc(x.exp.join(" / "))}</b>`:`${esc(x.q)} – <b>${esc(x.expDe)}</b>`)
+        :k==="forms"?(FR?`${esc(x.q)}: ${esc(x.lab)} … – <b>${esc(x.exp[0])}</b>`:`${esc(x.q)} – <b>${esc(x.exp[0])}, ${esc(x.exp2.join(" / "))}</b>`)
+        :k==="pair"?`${esc(x.q)} = <b>${x.letter}</b> ${esc(x.fg)}`
+        :k==="gap"?`${esc(x.before)}<b>${esc(x.exp[0])}</b>${esc(x.after)}`
+        :`${esc(x.q)} – <b>${esc(w?alts(w.en).join(" / "):"")}</b>${w&&w.sEn?` <small>(z. B. ${esc(w.sEn)})</small>`:""}`;
+      sol+=`<li>${k==="tr"&&x.dir==="fg"?esc(x.q)+" – <b>"+esc(x.exp.join(" / "))+"</b>":a}</li>`;
+    });
+    sol+=`</ol></div>`;
+  }
+  sol+=`</div>`;
+  return `<div class="noprint"><header class="top"><button class="btn ghost" data-act="print-close">← Zurück</button></header>
+    <div class="row" style="margin-bottom:14px"><button class="btn primary" data-act="print-now">Drucken</button><button class="btn" data-act="print-new">Neue Aufgaben</button><button class="btn" data-act="print-share">Als Datei teilen</button></div>
+    <p class="small muted">Seite 1 ist der Test, Seite 2 die Lösungen. Schwarz-Weiß gestaltet.</p></div>
+  <div id="printarea">${sheet}${sol}</div>`;
+}
+function printShare(){
+  const el=document.getElementById("printarea"); if(!el) return;
+  const css=[...document.querySelectorAll("style")].map(s=>s.textContent).join("\n");
+  const html=`<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vokabeltest</title><style>${css}</style></head><body class="printdoc">${el.outerHTML}</body></html>`;
+  const d=new Date(),z=n=>String(n).padStart(2,"0");
+  const file=new File([html],`vokabeltest-${PID}-${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}.html`,{type:"text/html"});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file]}).catch(()=>{});return}}catch(e){}
+  download(file);
 }
 
 /* ---------- toast & render ---------- */
@@ -1180,6 +1278,7 @@ function render(){
   else if(ui.view==="testsetup")h=vTestSetup();
   else if(ui.view==="test")h=ui.test?vTest():vTestSetup();
   else if(ui.view==="testresult")h=vTestResult();
+  else if(ui.view==="print")h=vPrint();
   else if(ui.view==="own")h=vOwn();
   else if(ui.view==="fotos")h=vFotos();
   else if(ui.view==="lock")h=vLock();
@@ -1210,6 +1309,14 @@ document.addEventListener("click",e=>{
     case "test-practice": {const t=(S.tests||[]).find(x=>x.id===b.dataset.id);if(!t)break;const ws=[...new Set(t.items.filter(x=>!x.ok).map(x=>x.wid))].map(wordById).filter(Boolean);
       const items=[];ws.forEach(w=>{["tippen","mc"].forEach(m=>{if(available(w,m))items.push({w:w.id,m})})});startSession(spread(shuffle(items)),true);break}
     case "ptest": ui.ptest=b.dataset.id||null; render(); break;
+    case "print-make": case "print-new": {const t=buildTest(ui.testSel||[]);if(!t){toast("Zu wenige Wörter.");break}ui.printTest=t;go("print");break}
+    case "print-close": ui.printTest=null; ui.view="parent"; ui.ptab="tests"; render(); break;
+    case "print-now": window.print(); break;
+    case "print-share": printShare(); break;
+    case "scale-save": {const v=[0,1,2,3,4].map(i=>parseFloat((document.getElementById("sc-"+i)||{}).value));
+      if(v.some(x=>isNaN(x)||x<0||x>100)||v.some((x,i)=>i&&x>=v[i-1])){toast("Bitte absteigende Werte zwischen 0 und 100.");break}
+      S.gradeScale=v;save();toast("Notenschlüssel gespeichert");break}
+    case "scale-reset": delete S.gradeScale; save(); render(); break;
     case "tst-set": {const t=(S.tests||[]).find(x=>x.id===b.dataset.id);if(!t)break;const x=t.items[+b.dataset.i];x.ok=b.dataset.v==="1";x.review=false;scoreTest(t);save();render();break}
     case "tst-del": if(ui.confirm!=="tst-del"){ui.confirm="tst-del";render();break} S.tests=(S.tests||[]).filter(x=>x.id!==b.dataset.id);ui.ptest=null;ui.confirm=null;save();render();break;
     case "pr-mode": ui.practice.mode=b.dataset.m; render(); break;

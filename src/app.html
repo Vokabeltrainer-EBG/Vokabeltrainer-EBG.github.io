@@ -1166,7 +1166,7 @@ function testItemRow(x,i,parent,tid){
 }
 function testBody(t,parent){
   const pct=t.max?Math.round(100*t.score/t.max):0;
-  let h=`<section class="card"><div class="row" style="justify-content:space-between;align-items:center"><div class="tnum" style="font-size:30px;font-weight:800">${t.score} von ${t.max} Punkten</div><div class="notebadge">Note ${note(t.score,t.max)}${t.open?"*":""}</div></div><p class="muted">${pct} % · ${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}</p>
+  let h=`<section class="card"><div class="row" style="justify-content:space-between;align-items:center"><div class="tnum" style="font-size:30px;font-weight:800">${t.score} von ${t.max} Punkten</div><div class="notebadge" title="${esc(noteLong(t.score,t.max))}">${note(t.score,t.max)}${t.open?"*":""}</div></div><p class="small"><b>${esc(noteLong(t.score,t.max))}</b>${t.open?" (vorläufig)":""}</p><p class="muted">${pct} % · ${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}</p>
   ${t.open?`<p class="small">${parent?`${t.open} Antworten bitte prüfen (eigene Sätze und knappe Schreibweisen).`:`Deine Eltern prüfen noch ${t.open} ${t.open===1?"Antwort":"Antworten"}. Die Punktzahl kann sich noch ändern.`}</p>`:""}</section>`;
   let no=1;
   for(const k of TEST_ORDER){
@@ -1187,20 +1187,24 @@ function pTests(){
   const ts=(S.tests||[]).slice().reverse();
   if(ui.ptest){const t=ts.find(x=>x.id===ui.ptest);if(t)return `<button class="btn ghost" data-act="ptest" data-id="">← Alle Tests</button>${testBody(t,true)}
     <button class="btn ${ui.confirm==="tst-del"?"danger armed":""}" data-act="tst-del" data-id="${t.id}">${ui.confirm==="tst-del"?"Wirklich löschen?":"Test löschen"}</button>`}
-  return `<section class="card"><h3>Vokabeltests</h3>${ts.length?ts.map(t=>`<button class="btn ghost wide rowbtn" data-act="ptest" data-id="${t.id}"><span>${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}${t.open?` · <b>${t.open} prüfen</b>`:""}</span><b class="tnum">${t.score}/${t.max} · Note ${note(t.score,t.max)}</b></button>`).join(""):`<p class="muted">Noch keine Tests geschrieben.</p>`}</section>
+  return `<section class="card"><h3>Vokabeltests</h3>${ts.length?ts.map(t=>`<button class="btn ghost wide rowbtn" data-act="ptest" data-id="${t.id}"><span>${new Date(t.t).toLocaleDateString("de-DE")} · ${esc(t.lessons.join(", "))}${t.open?` · <b>${t.open} prüfen</b>`:""}</span><b class="tnum">${t.score}/${t.max} · ${note(t.score,t.max)}</b></button>`).join(""):`<p class="muted">Noch keine Tests geschrieben.</p>`}</section>
   <section class="card"><h3>Test zum Ausdrucken</h3><p class="small muted">Buchseiten wählen. Du bekommst ein Testblatt und ein Lösungsblatt in Schwarz-Weiß.</p>
     <div class="stack">${testLessons().map((l,i,ls)=>`${isBasis(l.id)&&!isBasis((ls[i-1]||{}).id)?`<div class="eyebrow" style="margin-top:8px">Grundwortschatz</div>`:""}<label class="chk"><input type="checkbox" data-tsel="${l.id}" ${(ui.testSel||[]).includes(l.id)?"checked":""}> <span>${esc(l.name)}</span></label>`).join("")}</div>
     <button class="btn primary wide" data-act="print-make" ${S.words.filter(w=>(ui.testSel||[]).includes(w.lesson)&&w.de&&w.en).length>=6?"":"disabled"}>Druckversion erstellen</button></section>
-  <section class="card"><h3>Notenschlüssel</h3><p class="small muted">Prozent der Punkte, ab denen eine Note gilt.</p>
-    <div class="grid2">${scale().map((x,i)=>`<label class="f">Note ${i+1} ab %<input id="sc-${i}" class="in" type="number" inputmode="decimal" min="0" max="100" step="0.5" value="${x}"></label>`).join("")}</div>
+  <section class="card"><h3>Notenschlüssel</h3><p class="small muted">Prozent der Punkte, ab denen eine Stufe gilt. Darunter: ne (Erwartungen nicht erfüllt).</p>
+    <div class="grid2">${scale().map((x,i)=>`<label class="f">${GRADES[i][0]} (${GRADES[i][1]}) ab %<input id="sc-${i}" class="in" type="number" inputmode="decimal" min="0" max="100" step="0.5" value="${x}"></label>`).join("")}</div>
     <div class="row"><button class="btn" data-act="scale-save">Speichern</button><button class="btn ghost" data-act="scale-reset">Standard</button></div></section>`;
 }
 
 /* ---------- Noten & Druckversion ---------- */
-const DEF_SCALE=[87.5,75,62.5,50,25];
-const scale=()=>Array.isArray(S.gradeScale)&&S.gradeScale.length===5?S.gradeScale:DEF_SCALE;
-function note(score,max){if(!max)return "–";const p=100*score/max;const sc=scale();for(let i=0;i<5;i++)if(p>=sc[i]-1e-9)return String(i+1);return "6"}
-function scaleText(max){const sc=scale();return sc.map((x,i)=>`${i+1}: ab ${String(Math.ceil(max*x/100*2)/2).replace(".",",")}`).join(" · ")+` · 6: darunter`}
+const GRADES=[["üe","Erwartungen übertroffen"],["e","Erwartungen erfüllt"],["te","Erwartungen teilweise erfüllt"],["ne","Erwartungen nicht erfüllt"]];
+const DEF_SCALE=[92,80,45];
+const scale=()=>Array.isArray(S.gradeScale)&&S.gradeScale.length===3?S.gradeScale:DEF_SCALE;
+function gradeIdx(score,max){const p=100*score/max;const sc=scale();for(let i=0;i<3;i++)if(p>=sc[i]-1e-9)return i;return 3}
+function note(score,max){return max?GRADES[gradeIdx(score,max)][0]:"–"}
+function noteLong(score,max){return max?GRADES[gradeIdx(score,max)][1]:""}
+const pts=x=>String(x).replace(".",",");
+function scaleText(max){const sc=scale();return sc.map((x,i)=>`${GRADES[i][0]}: ab ${pts(Math.ceil(max*x/100*2)/2)}`).join(" · ")+` · ne: darunter`}
 function vPrint(){
   const t=ui.printTest; if(!t) return pTests();
   const xs=k=>t.items.map((x,i)=>[x,i]).filter(([x])=>x.k===k);
@@ -1219,7 +1223,7 @@ function vPrint(){
     if(k==="sent") sheet+=it.map(([x])=>`<div class="psent">${esc(x.q)}<div class="pl3"></div><div class="pl3"></div></div>`).join("");
     sheet+=`</div>`;
   }
-  sheet+=`<div class="ptotal"><span>Gesamt: ___ / ${t.items.length}</span><span>Note: ______</span></div>
+  sheet+=`<div class="ptotal"><span>Gesamt: ___ / ${t.items.length}</span><span>Bewertung: ______</span></div>
     <p class="pscale">Notenschlüssel: ${esc(scaleText(t.items.length))}</p></div>`;
   let sol=`<div class="psheet pbreak"><div class="phead"><div><b>Lösungen</b> · Vokabeltest ${esc(L.name)}</div><div>${esc(t.lessons.join(" · "))}</div></div>`;
   no=1;
@@ -1300,7 +1304,7 @@ document.addEventListener("click",e=>{
     case "print-close": ui.printTest=null; ui.view="parent"; ui.ptab="tests"; render(); break;
     case "print-now": window.print(); break;
     case "print-share": printShare(); break;
-    case "scale-save": {const v=[0,1,2,3,4].map(i=>parseFloat((document.getElementById("sc-"+i)||{}).value));
+    case "scale-save": {const v=[0,1,2].map(i=>parseFloat((document.getElementById("sc-"+i)||{}).value));
       if(v.some(x=>isNaN(x)||x<0||x>100)||v.some((x,i)=>i&&x>=v[i-1])){toast("Bitte absteigende Werte zwischen 0 und 100.");break}
       S.gradeScale=v;save();toast("Notenschlüssel gespeichert");break}
     case "scale-reset": delete S.gradeScale; save(); render(); break;

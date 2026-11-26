@@ -365,6 +365,7 @@ const secure = w=>{const ms=wordModes(w);return ms.length>0&&ms.every(m=>P(w.id,
 const started = w=>MODES.some(m=>P(w.id,m.id).box>0);
 /* Grundwortschatz: Lektionen "Basis – …" (IDs beginnen mit basis-) laufen nebenbei mit */
 const BASIS_NEW = 2;
+const NEW_PER_ROUND = 10;
 const isBasis = id=>/^basis-/.test(String(id||""));
 const basisLabel = name=>String(name).replace(/^Basis\s*[–-]\s*/,"");
 function basisStartedToday(){
@@ -414,7 +415,7 @@ function buildDaily(){
   const groups=[...neu.values()];
   if(space>0){
     const partial=groups.filter(g=>!g.isNew).flatMap(g=>g.items);
-    const fresh=groups.filter(g=>g.isNew&&!g.basis).slice(0,5).flatMap(g=>g.items);
+    const fresh=groups.filter(g=>g.isNew&&!g.basis).slice(0,NEW_PER_ROUND).flatMap(g=>g.items);
     items=items.concat(partial.concat(fresh).slice(0,space));
   }
   // zusätzlich bis zu 2 neue Grundwortschatz-Wörter pro Tag, abwechselnd aus den Gruppen
@@ -986,7 +987,7 @@ function pSettings(){
   const armedR=ui.confirm==="reset", armedB=ui.confirm==="restore";
   return `<section class="card"><h3>Lernrunde</h3>
     <label class="f">Übungen pro Tag<select class="in" data-change="perday">${[10,15,20,30,40].map(n=>`<option ${S.perDay===n?"selected":""}>${n}</option>`).join("")}</select></label>
-    <p class="small muted">Pro Runde kommen höchstens 5 ganz neue Wörter aus dem Buch dazu. Zusätzlich kommen pro Tag bis zu ${BASIS_NEW} neue Wörter aus dem Grundwortschatz.</p>
+    <p class="small muted">Pro Runde kommen höchstens ${NEW_PER_ROUND} ganz neue Wörter aus dem Buch dazu. Zusätzlich kommen pro Tag bis zu ${BASIS_NEW} neue Wörter aus dem Grundwortschatz.</p>
   </section>
   <section class="card"><h3>Profil</h3><p class="small muted">Dieses iPad ist für ${esc(PROF.name)} eingerichtet. Beim Abmelden bleibt der Lernstand gespeichert. Danach fragt die App wieder nach dem Code.</p>
     <button class="btn ${ui.confirm==="logout"?"danger armed":""}" data-act="logout">${ui.confirm==="logout"?"Wirklich abmelden?":"Abmelden"}</button></section>

@@ -112,7 +112,7 @@ button,html{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 @keyframes bounce{50%{transform:translateY(12px)}}
 .hud{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px max(3vw,10px) 16px;background:linear-gradient(rgba(20,40,5,.45),transparent);pointer-events:none}
 .hud>*{pointer-events:auto}
-.status{flex:1 1 220px;display:flex;align-items:center;gap:10px;flex-wrap:nowrap}@media(max-width:900px){.status .lbl{display:none}.status .gbtn{padding-left:14px;padding-right:14px}}
+.status{flex:1 1 220px;display:flex;align-items:center;gap:10px;flex-wrap:nowrap}.status .gbtn{white-space:nowrap}@media(max-width:900px){.status .lbl{display:none}.status .gbtn{padding-left:14px;padding-right:14px}}
 .pills{display:flex;gap:8px;margin-left:auto}
 .pill{display:flex;align-items:center;gap:6px;background:rgba(40,25,5,.5);border-radius:999px;padding:3px 14px 3px 4px;font-size:22px;white-space:nowrap}
 .pill svg{width:36px;height:36px}
@@ -194,10 +194,12 @@ button:focus-visible{outline:3px solid #1d63d8;outline-offset:3px}
 .rimg{aspect-ratio:600/250;max-height:34vh;width:100%;background-size:cover}
 .obj:active>svg{filter:brightness(1.12)}
 #fade{position:fixed;inset:0;background:#2f4a1a;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9000}#fade.on{opacity:1}
-#grid{position:absolute;left:0;top:0;width:0;height:0;z-index:1}.obj.msel>svg{filter:drop-shadow(0 0 6px #ffd84a) drop-shadow(0 0 3px #fff)}body.edit #dock,body.edit #goal{display:none}body.edit .obj{touch-action:none}body.edit .fb{pointer-events:none;opacity:.5}
+#grid{position:absolute;left:0;top:0;width:0;height:0;z-index:1}.obj.msel>svg{filter:drop-shadow(0 0 6px #ffd84a) drop-shadow(0 0 3px #fff)}body.edit #dock,body.edit #goal{display:none}body.edit .obj.msel{touch-action:none}body.edit .fb{pointer-events:none;opacity:.5}
 .note .chain{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;white-space:nowrap}
 body.edit.hassel #map{touch-action:none}
-.wkback{opacity:1!important;text-decoration:none;display:inline-flex;align-items:center;border-style:solid}
+.wkback:not([hidden]){opacity:1!important;text-decoration:none;display:inline-flex;align-items:center;border-style:solid;min-height:44px;margin-right:16px}
+.gate .go{display:none}.gate.open .go{display:inline}.gate.open .gc{display:none}
+.obj[data-act=tree]::after{content:'';position:absolute;inset:0}
 </style>
 </head>
 <body>
@@ -335,9 +337,9 @@ const CROPS={
  pumpkin:{n:'Pumpkins',de:'Kürbisse',one:'pumpkin',many:'pumpkins',seed:15,r:2,h:1,y:4,p:24,u:220,lv:6},
  straw:{n:'Strawberries',de:'Erdbeeren',one:'strawberry',many:'strawberries',seed:20,r:2,h:4,y:3,p:10,u:350,lv:8},
  sun:{n:'Sunflowers',de:'Sonnenblumen',one:'sunflower',many:'sunflowers',seed:25,r:3,h:3,y:3,p:16,u:500,lv:10}};
-const EXTRA={apple:{n:'Apples',de:'Äpfel',one:'apple',many:'apples',p:15},cherry:{n:'Cherries',de:'Kirschen',one:'bowl of cherries',many:'bowls of cherries',p:18},pear:{n:'Pears',de:'Birnen',one:'pear',many:'pears',p:16},juice:{n:'Apple juice',de:'Apfelsaft',one:'bottle of apple juice',many:'bottles of apple juice',p:65},jam:{n:'Cherry jam',de:'Kirschmarmelade',one:'jar of cherry jam',many:'jars of cherry jam',p:75},feed:{n:'Animal feed',de:'Tierfutter',one:'sack of animal feed',many:'sacks of animal feed',p:8},sugar:{n:'Sugar',de:'Zucker',one:'bag of sugar',many:'bags of sugar',p:30},cookies:{n:'Cookies',de:'Kekse',one:'box of cookies',many:'boxes of cookies',p:60},bread:{n:'Bread',de:'Brot',one:'loaf of bread',many:'loaves of bread',p:40},flour:{n:'Flour',de:'Mehl',one:'bag of flour',many:'bags of flour',p:16},giant:{n:'Giant pumpkin',de:'Riesenkürbis',one:'giant pumpkin',many:'giant pumpkins',p:60},egg:{n:'Eggs',de:'Eier',one:'egg',many:'eggs',p:8},milk:{n:'Milk',de:'Milch',one:'bottle of milk',many:'bottles of milk',p:20},cake:{n:'Cake',de:'Kuchen',one:'cake',many:'cakes',p:100}};
+const EXTRA={apple:{n:'Apples',de:'Äpfel',one:'apple',many:'apples',p:15},cherry:{n:'Cherries',de:'Kirschen',one:'bowl of cherries',many:'bowls of cherries',p:18},pear:{n:'Pears',de:'Birnen',one:'pear',many:'pears',p:16},juice:{n:'Apple juice',de:'Apfelsaft',one:'bottle of apple juice',many:'bottles of apple juice',p:80},jam:{n:'Cherry jam',de:'Kirschmarmelade',one:'jar of cherry jam',many:'jars of cherry jam',p:110},feed:{n:'Animal feed',de:'Tierfutter',one:'sack of animal feed',many:'sacks of animal feed',p:8},sugar:{n:'Sugar',de:'Zucker',one:'bag of sugar',many:'bags of sugar',p:30},cookies:{n:'Cookies',de:'Kekse',one:'box of cookies',many:'boxes of cookies',p:60},bread:{n:'Bread',de:'Brot',one:'loaf of bread',many:'loaves of bread',p:40},flour:{n:'Flour',de:'Mehl',one:'bag of flour',many:'bags of flour',p:16},giant:{n:'Giant pumpkin',de:'Riesenkürbis',one:'giant pumpkin',many:'giant pumpkins',p:60},egg:{n:'Eggs',de:'Eier',one:'egg',many:'eggs',p:8},milk:{n:'Milk',de:'Milch',one:'bottle of milk',many:'bottles of milk',p:20},cake:{n:'Cake',de:'Kuchen',one:'cake',many:'cakes',p:100}};
 const GOAL=60,HOUSE=100,MAXF=16,CAP=30;
-const ZONES={farm:{n:'Hof',d:'Ackerland: Felder, Brunnen, Haus'},mill:{n:'Mühle & Backstube',d:'Hinten rechts: Mühle (gleich dabei), Bäckerei, Zuckersiederei',lv:4,c:250,need:{wheat:20}},vieh:{n:'Viehhof',d:'Oben links: Hühnerstall (gleich dabei) und Kuhweide; Futter kommt aus der Mühle (Mais → Tierfutter)',lv:10,c:500,need:{bread:6,cookies:4,corn:15}},obst:{n:'Obstgarten',d:'Oben zwischen Backstube und Viehhof: Apfel-, Kirsch- und Birnbäume, Saftpresse, Marmeladenküche',lv:14,c:1200,need:{cake:5,milk:10,egg:10}}};
+const ZONES={farm:{n:'Hof',d:'Ackerland: Felder, Brunnen, Haus'},mill:{n:'Mühle & Backstube',d:'Hinten rechts: Mühle (gleich dabei), Bäckerei, Zuckersiederei',lv:4,c:250,need:{wheat:20}},vieh:{n:'Viehhof',d:'Oben links: Hühnerstall (gleich dabei) und Kuhweide; Futter kommt aus der Mühle (Mais → Tierfutter)',lv:10,c:500,need:{bread:6,cookies:4,corn:15}},obst:{n:'Obstgarten',d:'Oben zwischen Backstube und Viehhof: Apfel-, Kirsch- und Birnbäume, Saftpresse, Marmeladenküche',lv:14,c:1200,need:{cake:5,milk:6,egg:8}}};
 const ZORD=['farm','mill','vieh','obst'],BZ={mill:'mill',bakery:'mill',sugar:'mill',coop:'vieh',cow:'vieh',press:'obst',jam:'obst'},zoneOf=k=>BZ[k]||'farm';
 const UPS={
  well:{n:'Brunnen',d:'+1 Stück bei jeder Ernte',c:150,lv:1},
@@ -410,6 +412,8 @@ const need=f=>f.h>0?1:Math.max(1,CROPS[f.c].r-(S.up.green&&CROPS[f.c].r>1?1:0));
 const firstR=c=>Math.max(1,CROPS[c].r-(S.up.green&&CROPS[c].r>1?1:0));
 const ready=f=>!!f.c&&f.g>=need(f);
 const left=f=>need(f)-f.g;
+const TIERF=x=>({juice:6,jam:6,apple:4,cherry:4,pear:4,cake:5,milk:4,egg:4,cookies:4,bread:3,sugar:3,flour:2,sun:3,straw:3,pumpkin:2,feed:0})[x]??1;
+const TIER=TIERF;
 const SQ=[1,1.75,2.5],slv=c=>(S.seedLv||{})[c]||0,yld=(c,q=slv(c))=>Math.round((CROPS[c].y+stg('well'))*SQ[q]),sCost=(c,q=slv(c))=>CROPS[c].seed*(1+q),sUp=c=>[0,150+Math.round(CROPS[c].u*1.5),400+CROPS[c].u*3][slv(c)+1],bestQ=(c,n=1)=>{for(let q=slv(c);q>0;q--)if(S.seeds>=sCost(c,q)*n)return q;return 0};
 const fp=()=>S.fields.length<8?Math.round(60*1.5**(S.fields.length-3)/10)*10:450+(S.fields.length-8)*120;
 const sp=()=>Math.round(100*1.5**(S.slots-3)/10)*10;
@@ -550,7 +554,7 @@ function ground(){if(!SPR.grass)return groundOld();const r=seeded(11);let s=`<sv
  const edge=(A,B,gate)=>{const n=Math.round((B[0]-A[0])/88);let o='';const segs=[],gates=[];for(let i=0;i<n;i++){const a=[A[0]+(B[0]-A[0])*i/n,A[1]+(B[1]-A[1])*i/n],b=[A[0]+(B[0]-A[0])*(i+1)/n,A[1]+(B[1]-A[1])*(i+1)/n];
    const m=[(a[0]+b[0])/2,(a[1]+b[1])/2];let near=nearPath(m[0],m[1],60);if(!near)segs.push([a,b]);else gates.push([a,b])}
   const up=B[1]<A[1];(up?segs.reverse():segs).forEach(([a,b],i)=>{o+=fseg(a,b)+tuft(i%2?'tuft1':'tuft2',a[0],a[1]+3,18)});
-  if(SPR.gate)gates.forEach(([a,b],i)=>{const w=b[0]-a[0],h=w*.821,sk=Math.atan2(b[1]-a[1],w)*180/Math.PI;o+=`<g transform="translate(${a[0].toFixed(1)} ${a[1].toFixed(1)}) skewY(${sk.toFixed(2)})"><image href="${SPR.gate}" x="0" y="${(2-h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" ${i===0?`transform="translate(${w.toFixed(1)} 0) scale(-1 1)"`:''}/></g>`});return o};
+  if(SPR.gate)gates.forEach(([a,b],i)=>{const w=b[0]-a[0],h=w*.821,sk=Math.atan2(b[1]-a[1],w)*180/Math.PI;o+=`<g class="gate" data-x="${((a[0]+b[0])/2).toFixed(0)}" data-y="${((a[1]+b[1])/2).toFixed(0)}"><g class="gc">${fseg(a,b)}</g><g class="go" transform="translate(${a[0].toFixed(1)} ${a[1].toFixed(1)}) skewY(${sk.toFixed(2)})"><image href="${SPR.gate}" x="0" y="${(2-h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" ${i===0?`transform="translate(${w.toFixed(1)} 0) scale(-1 1)"`:''}/></g></g>`});return o};
  if(Z==='farm'&&!S.zones.obst&&SPR.treeApple)s+=`<g opacity=".75"><image href="${SPR.treeApple}" x="385" y="105" width="110" height="116"/></g>`;
  if(Z==='farm'&&!S.zones.vieh&&SPR.bCoop)s+=`<g opacity=".7"><ellipse cx="100" cy="272" rx="60" ry="16" fill="url(#gSoft)" opacity=".3"/><image href="${SPR.bCoop}" x="40" y="150" width="120" height="134"/></g>`;
  if(Z==='farm'&&!S.zones.mill&&SPR.bMill)s+=`<g opacity=".7"><ellipse cx="1180" cy="127" rx="70" ry="20" fill="url(#gSoft)" opacity=".3"/><image href="${SPR.bMill}" x="1105" y="-75" width="150" height="202"/></g>`;
@@ -610,7 +614,7 @@ function wantGoods(){const g=new Set();S.fields.forEach(f=>{if(f.c)g.add(f.c)});
  if(S.up.cow&&(S.cow.fed||S.cow.eggs||have('milk')))g.add('milk');if(S.up.sugar&&(have('beet')>=2||have('sugar')))g.add('sugar');if(S.up.bakery){if(have('flour')>=2||have('bread')||S.oven.some(o=>o.g==='bread'))g.add('bread');if(have('sugar')||have('cookies')||S.oven.some(o=>o.g==='cookies'))g.add('cookies');if(have('cake')||S.oven.some(o=>o.g==='cake')||have('sugar')&&have('straw')>=2)g.add('cake')}
  (S.trees||[]).forEach(t=>{if(t.k)g.add(TREES[t.k].out)});if(S.up.press&&(have('apple')>=3||have('juice')))g.add('juice');if(S.up.jam&&(have('cherry')>=2||have('jam')))g.add('jam');
  const a=[...g].filter(x=>x==='flour'?S.up.mill:x in ANIMOUT?S.up[ANIMOUT[x]]:x==='cake'||x==='bread'||x==='cookies'?S.up.bakery:x==='sugar'?S.up.sugar:x==='apple'||x==='cherry'||x==='pear'?S.zones.obst:x==='juice'?S.up.press:x==='jam'?S.up.jam:S.crops.includes(x));return a.length?a:goods()}
-function newOrder(){const pool=wantGoods();const k=pool.length>1&&Math.random()<.4?2:1;const TIER=x=>({juice:6,jam:6,apple:4,cherry:4,pear:4,cake:5,cheese:5,milk:4,egg:4,cookies:4,bread:3,sugar:3,flour:2,sun:3,straw:3,pumpkin:2,feed:0})[x]??1,top=Math.max(...pool.map(TIER));const w=x=>{const t=TIER(x);return(top>=3?(t>=top-1?8:t>=2?2:.15):1)*(have(x)>0?2:1)*Math.random()};const pick=[...pool].sort((a,b)=>w(b)-w(a)).slice(0,k);
+function newOrder(){const pool=wantGoods();const k=pool.length>1&&Math.random()<.4?2:1;const TIER=TIERF,top=Math.max(...pool.map(TIER));const w=x=>{const t=TIER(x);return(top>=3?(t>=top-1?8:t>=2?2:.15):1)*(have(x)>0?2:1)*Math.random()};const pick=[...pool].sort((a,b)=>w(b)-w(a)).slice(0,k);
  const LF=1+.12*(S.lv-1);const items=pick.map(x=>({g:x,q:Math.min(30,Math.round((2+rnd(Math.max(2,Math.ceil(20/price(x)))))*LF))}));const val=items.reduce((s,i)=>s+i.q*price(i.g),0);
  return{who:WHO[rnd(WHO.length)],items,reward:Math.max(10,Math.round(val*1.6/5)*5),age:0,tpl:S.lv>=3?rnd(TPL.length):0}}
 function chainOrder(){const LF=1+.08*(S.lv-1),it=[];const add=(g,a,b)=>it.push({g,q:Math.round((a+rnd(b-a+1))*LF)});
@@ -650,7 +654,7 @@ const bico=k=>{if((k==='press'&&!SPR.bPress)||(k==='jam'&&!SPR.bJam))return`<svg
 function statusHTML(){
  if(S.tut!=null&&canAct())return`<span>Anleitung</span>`;
  if(edit)return`<button class="gbtn gold" data-act="editDone">✓ Fertig umgestellt</button>`;
- if(canAct())return`<button class="gbtn red" data-act="endAsk">Feierabend</button><button class="gbtn" data-act="editStart" aria-label="Umstellen">✥<span class="lbl"> Umstellen</span></button>${Z!=='farm'?'<button class="gbtn" data-act="goZone" data-z="farm">← Hof</button>':''}`;
+ if(canAct())return`<button class="gbtn red" data-act="endAsk" aria-label="Feierabend">🌙<span class="lbl"> Feierabend</span></button><button class="gbtn" data-act="editStart" aria-label="Umstellen">✥<span class="lbl"> Umstellen</span></button>`;
  if(S.playing||S.unlocked)return`<button class="gbtn" data-act="play">Spielen</button>`;
  return`${pips()}<span>${S.cnt} / ${GOAL} richtige Antworten</span>`}
 const mkOf=id=>!id?'':id==='o-house'?'house':/^o-f\d+$/.test(id)?id.slice(2):/^o-d/.test(id)?'d_'+id.slice(3):['o-well','o-green','o-truck','o-mill','o-bakery','o-sugar','o-coop','o-cow','o-press','o-jam'].includes(id)?id.slice(2):'';
@@ -703,7 +707,7 @@ function doMove(k,ti,tj){if(!tryPlace(k,ti,tj,true)){ghost(k,ti,tj,false);setTim
  if(PKS.includes(k)||k==='pond')$('ground').innerHTML=ground();gdynKey='';edSel=null;render();toast('Umgestellt!')}
 function edTap(e){const [ci,cj]=cellAt(e.clientX,e.clientY),o=occ(),ob=e.target.closest('.obj[data-mk]'),hitK=o[ci+','+cj]||(ob&&ob.dataset.mk);
  if(edSel&&hitK===edSel){edSel=null;render();return toast('Auswahl aufgehoben.')}
- if(!edSel){if(!hitK)return toast('Tippe zuerst etwas an, das du umstellen willst.');edSel=hitK;render();return toast('Tippe auf den neuen Platz – oder zieh es mit dem Finger.')}
+ if(!edSel){if(!hitK)return toast('Tippe zuerst etwas an, das du umstellen willst.');edSel=hitK;render();return toast('Tippe auf den neuen Platz – oder zieh es jetzt mit dem Finger.')}
  doMove(edSel,...tgt(edSel,[ci,cj]))}
 let drag=null,noClick=false;
 function objsHTML(){let s='';if(Z!=='farm')return zoneObjs();
@@ -819,16 +823,16 @@ function render(){S.lv=lvOf(S.xp);gdyn();for(const k in S.inv)if(S.inv[k]>0)S.se
 
 const RCP={bread:{flour:2},cookies:{flour:1,sugar:1},cake:{flour:1,sugar:1,straw:2}};
 const canBake=g=>Object.entries(RCP[g]).every(([x,n])=>have(x)>=n),rcpTxt=g=>Object.entries(RCP[g]).map(([x,n])=>dq(x,n)).join(' + ');
-function takeOven(rc){const m={};S.oven.filter(o=>o.ready).forEach(o=>{const g=o.g||'cake';m[g]=(m[g]||0)+1;S.inv[g]=have(g)+1});S.oven=S.oven.filter(o=>!o.ready);const gs=Object.keys(m);if(!gs.length)return;burst(rc,['star',gs[0]],8,'');fly(gs[0],rc,$('dStore'),3);toast('+'+gs.map(g=>dq(g,m[g])).join(', '))}
+function takeOven(rc){const m={};S.oven.filter(o=>o.ready).forEach(o=>{const g=o.g||'cake';m[g]=(m[g]||0)+2;S.inv[g]=have(g)+2});S.oven=S.oven.filter(o=>!o.ready);const gs=Object.keys(m);if(!gs.length)return;burst(rc,['star',gs[0]],8,'');fly(gs[0],rc,$('dStore'),3);toast('+'+gs.map(g=>dq(g,m[g])).join(', '))}
 function bakeHTML(){const sl=[...Array(1+stg('bakery')).keys()].map(i=>{const o=S.oven[i];return`<div class="line">${ico(o?o.g||'cake':'bread','big')}<span class="grow">${!o?'Ofen frei':o.ready?'<b>Fertig!</b>':`${de(o.g||'cake')} im Ofen – fertig beim nächsten Spielen`}</span>${!o?Object.entries(RCP).map(([g,r])=>`<button class="btn" data-act="bake" data-g="${g}" ${dis(canBake(g),'Du brauchst '+rcpTxt(g)+'.')}>${de(g)}</button>`).join(''):''}</div>`}).join('');
- const rdy=S.oven.filter(o=>o.ready).length;return frame('Bäckerei',`${rdy?`<div class="line">${ico(S.oven.find(o=>o.ready).g||'bread','big')}<span class="grow"><b>${rdy}× fertig!</b></span><button class="btn gold" data-act="bakeTake" ${dis(1)}>Herausnehmen</button></div>`:''}<p>${Object.keys(RCP).map(g=>`${rcpTxt(g)} → <b>${dq(g,1)}</b>`).join('<br>')}<br><span class="small mute">Fertig beim nächsten Spielen.</span></p>${sl}<p class="small mute">Im Lager: ${['flour','sugar','straw'].map(g=>dq(g,have(g))).join(', ')}</p>`)}
+ const rdy=S.oven.filter(o=>o.ready).length;return frame('Bäckerei',`${rdy?`<div class="line">${ico(S.oven.find(o=>o.ready).g||'bread','big')}<span class="grow"><b>${rdy}× fertig!</b></span><button class="btn gold" data-act="bakeTake" ${dis(1)}>Herausnehmen</button></div>`:''}<p>${Object.keys(RCP).map(g=>`${rcpTxt(g)} → <b>${dq(g,2)}</b>`).join('<br>')}<br><span class="small mute">Fertig beim nächsten Spielen.</span></p>${sl}<p class="small mute">Im Lager: ${['flour','sugar','straw'].map(g=>dq(g,have(g))).join(', ')}</p>`)}
 function truckHTML(){const t=S.truck;if(!t)return frame('Lieferwagen','<p>Der Lieferwagen ist unterwegs.</p>');const full=t.items.every(c=>c.f>=c.q);
  return frame('Lieferwagen',`<p>Fülle alle Kisten bis ${t.until>S.plays?'zum nächsten Spielen':'Feierabend'}. Belohnung: ${coin(t.reward)} + doppelte Sterne + Abzeichen.</p>${t.items.map((c,i)=>`<div class="line">${ico(c.g,'big')}<span class="grow"><b>${c.f} / ${c.q}</b> ${DQ[c.g]?DQ[c.g][c.q===1?0:1]:de(c.g)}<div class="gbar"><i style="width:${(c.f/c.q*100).toFixed(0)}%"></i></div></span><button class="btn alt" data-act="load" data-i="${i}" ${dis(c.f<c.q&&have(c.g)>0)}>Einladen</button></div>`).join('')}<div class="row" style="margin-top:10px"><button class="gbtn" data-act="drive" ${dis(full)}>Losfahren!</button></div>${S.badges?`<p class="small mute">Abzeichen bisher: ${S.badges}</p>`:''}`)}
 function albumHTML(){const all=['wheat','carrot','beet','corn','pumpkin','straw','sun','flour','bread','sugar','cookies',...(S.zones.obst?['apple','cherry','pear','juice','jam']:[]),...(S.zones.vieh?['egg','milk']:[]),'cake','giant'];const n=all.filter(g=>S.seen[g]).length;
  return frame('Album',`<p class="small mute">${n} von ${all.length} Karten gesammelt. Tippe auf eine Karte, um das Wort zu hören.</p><div class="alb">${all.map(g=>S.seen[g]?`<button class="card2" data-act="sayW" data-w="${art(g)}">${ico(g==='giant'?'pumpkin':g,'')}<b>${art(g)}</b><span>${DQ[g]?'1 '+DQ[g][0]:G(g).de}</span></button>`:`<div class="card2 off">${ico(g==='giant'?'pumpkin':g,'')}<b>?</b><span>noch nicht</span></div>`).join('')}</div>${S.badges?`<h4>Abzeichen</h4><p>${'<svg class="ico"><use href="#crate"/></svg>'.repeat(Math.min(S.badges,20))} ${S.badges}× Lieferwagen</p>`:''}`)}
 function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 function quizHTML(){const o=S.orders[quizI];if(!o)return frame('Auftrag','');
- if(!o.ch){const want=o.items.map(it=>it.g);const pool=['wheat','carrot','corn','pumpkin','straw','sun','flour','egg'].filter(g=>!want.includes(g)).sort(()=>Math.random()-.5);o.ch=[...want,...pool].slice(0,Math.max(4,want.length+2)).sort(()=>Math.random()-.5)}
+ if(!o.ch){const want=o.items.map(it=>it.g);const T0=Math.max(...want.map(TIER)),pool=goods().filter(g=>g!=='giant'&&g!=='feed'&&!want.includes(g)).sort((a,b)=>(Math.abs(TIER(a)-T0)-Math.abs(TIER(b)-T0))+(Math.random()-.5)*1.5);o.ch=[...want,...pool].slice(0,Math.max(4,want.length+2)).sort(()=>Math.random()-.5)}
  return frame(o.who,`<div class="row" style="flex-wrap:nowrap"><button class="spk" data-act="say" aria-label="Vorlesen">${ico('speaker','')}</button><p class="qsay">„${sentence(o,1)}“</p></div>${o.miss?`<div class="row" style="flex-wrap:nowrap"><button class="spk" data-act="sayMiss" aria-label="Vorlesen">${ico('speaker','')}</button><p class="qsay">„Not quite – try again!“<br><span class="small mute">Nicht ganz – versuch es nochmal!</span></p></div>`:''}<p class="small mute">Was braucht ${o.who}? Tippe die richtige Ware an${o.items.length>1?` (${o.items.length} Sachen)`:''}.${o.miss?'':' Richtig beim ersten Versuch = <b>+5 Taler Trinkgeld</b>.'}</p>
  <div class="qgrid">${o.ch.map(g=>`<button class="qc ${quizSel.has(g)?'on':''}" data-act="pick" data-g="${g}" aria-label="${nm(g)}">${ico(g,'')}</button>`).join('')}</div>
  <div class="row" style="margin-top:12px"><button class="gbtn" data-act="pack" ${quizSel.size?'':'aria-disabled="true" data-why="Tippe zuerst eine Ware an."'}>Einpacken &amp; liefern</button></div>`)}
@@ -865,11 +869,19 @@ function initAnimals(){if(!SPR.hen||RM)return;
   }
   requestAnimationFrame(step)};requestAnimationFrame(step)}
 function dogTo(x,y){const d=actors.find(a=>a.k==='dog');if(!d)return;d.tx=x;d.ty=y;d.st='walk';d.h=57;d.el.style.height='57px';setImg(d,'dogRun1');d.el.classList.toggle('flip',x<d.x)}
-function dogFollow(x,y){const d=actors.find(a=>a.k==='dog');if(!d||Math.random()<.4)return;d.back=0;setTimeout(()=>dogTo(x+35,y+18),300)}
+function dogFollow(x,y){if(!inF([x,y]))[x,y]=clampIn([x,y]);const d=actors.find(a=>a.k==='dog');if(!d||Math.random()<.4)return;d.back=0;setTimeout(()=>dogTo(x+35,y+18),300)}
 /* ---------- Figur ---------- */
 const hero={x:575,y:500,raf:0};
-function heroPlace(){const h=$('heroEl');if(!hero.w){hero.w=h.offsetWidth||48;hero.ht=h.offsetHeight||72}h.style.transform=`translate3d(${(hero.x-hero.w*.48).toFixed(1)}px,${(hero.y-hero.ht+4).toFixed(1)}px,0)`;const z=Math.round(hero.y);if(z!==hero.zi){hero.zi=z;h.style.zIndex=z}}
-let walkSeq=0;function walkTo(x,y,cb){cancelAnimationFrame(hero.raf);const my=++walkSeq;if(Math.hypot(x-hero.x,y-hero.y)>120)dogFollow(x,y);const h=$('heroEl');h.classList.remove('gone','mow');const x0=hero.x,y0=hero.y,d=Math.hypot(x-x0,y-y0);
+let gateEls=null;function gatesNear(){if(!gateEls||!gateEls.length||!gateEls[0].isConnected)gateEls=[...document.querySelectorAll('#ground .gate')];for(const g of gateEls){const near=Math.hypot(hero.x-+g.dataset.x,hero.y-+g.dataset.y)<110;if(near!==g.classList.contains('open'))g.classList.toggle('open',near)}}
+function heroPlace(){gatesNear();const h=$('heroEl');if(!hero.w){hero.w=h.offsetWidth||48;hero.ht=h.offsetHeight||72}h.style.transform=`translate3d(${(hero.x-hero.w*.48).toFixed(1)}px,${(hero.y-hero.ht+4).toFixed(1)}px,0)`;const z=Math.round(hero.y);if(z!==hero.zi){hero.zi=z;h.style.zIndex=z}}
+function gateList(){const G=[];for(const PP of PATHS)for(let i=0;i<PP.length-1;i++){const a=PP[i],b=PP[i+1];if(inF(a)===inF(b))continue;let lo=0,hi=1;for(let k=0;k<20;k++){const m=(lo+hi)/2,q=[a[0]+(b[0]-a[0])*m,a[1]+(b[1]-a[1])*m];(inF(q)===inF(a)?(lo=m):(hi=m))}
+  const L=Math.hypot(b[0]-a[0],b[1]-a[1]),ux=(b[0]-a[0])/L,uy=(b[1]-a[1])/L,c=[a[0]+(b[0]-a[0])*lo,a[1]+(b[1]-a[1])*lo],s=inF(a)?1:-1;G.push({i:[c[0]-ux*35*s,c[1]-uy*35*s],o:[c[0]+ux*35*s,c[1]+uy*35*s]})}return G}
+function clampIn([x,y]){const c=[700,560];for(let k=0;k<30&&!inF([x,y]);k++){x+=(c[0]-x)*.12;y+=(c[1]-y)*.12}return[x,y]}
+function walkTo(x,y,cb){const A=[hero.x,hero.y],T=[x,y],ia=inF(A),it=inF(T);let legs=[T];
+ if(ia!==it){const G=gateList();let best=null,bd=1e9;for(const g of G){const p=ia?[g.i,g.o]:[g.o,g.i],d=Math.hypot(A[0]-p[0][0],A[1]-p[0][1])+Math.hypot(T[0]-p[1][0],T[1]-p[1][1]);if(d<bd){bd=d;best=p}}
+  legs=best?[best[0],best[1],T]:[ia?clampIn(T):T]}
+ const go=k=>walkLeg(legs[k][0],legs[k][1],k<legs.length-1?()=>go(k+1):cb);go(0)}
+let walkSeq=0;function walkLeg(x,y,cb){cancelAnimationFrame(hero.raf);const my=++walkSeq;if(Math.hypot(x-hero.x,y-hero.y)>120)dogFollow(x,y);const h=$('heroEl');h.classList.remove('gone','mow');const x0=hero.x,y0=hero.y,d=Math.hypot(x-x0,y-y0);
  if(d<4||RM){hero.x=x;hero.y=y;heroPlace();return cb&&cb()}
  if(Math.abs(x-x0)>2)h.classList.toggle('flip',x<x0);h.classList.add('walk');const T=Math.min(d/0.3,1400),t0=performance.now();
  const st=t=>{const k=Math.min(1,(t-t0)/T);hero.x=x0+(x-x0)*k;hero.y=y0+(y-y0)*k;heroPlace();frame2(SPR.fw1?['fw1','fw2','fw3','fw4'][Math.floor((t-t0)/140)%4]:Math.floor((t-t0)/170)%2?'farmerWalk':'farmer');if(k<1)hero.raf=requestAnimationFrame(st);else{h.classList.remove('walk');frame2('farmer');if(my===walkSeq)cb&&cb()}};hero.raf=requestAnimationFrame(st)}
@@ -920,14 +932,14 @@ function plantSheet(i){const all=i==='all',free=S.fields.filter(f=>!f.c).length;
 function welcome(){let b;const nr=nextReady();
  if(S.playing)b=`<p>Deine Spielrunde läuft noch.</p><div class="row"><button class="gbtn" data-act="play">Weiterspielen</button><button class="btn alt" data-act="look">Nur anschauen</button></div>`;
  else if(S.unlocked)b=`<p>Du hast ${GOAL} richtige Antworten gesammelt. <b>Deine Farm ist freigeschaltet!</b></p>${nr?`<p>Reif sind: <b>${nr}</b></p>`:''}<div class="row"><button class="gbtn" data-act="play">Spielen</button><button class="btn alt" data-act="look">Nur anschauen</button></div>`;
- else{b=`<div class="row">${pips()}<b>${S.cnt} / ${GOAL}</b></div><p style="margin-top:10px">Noch <b>${GOAL-S.cnt} richtige Antworten</b>, dann darfst du wieder spielen.</p>${nr?`<p>Beim nächsten Spielen reif: <b>${nr}</b></p>`:''}<div class="row"><button class="btn alt" data-act="look">Anschauen</button><button class="gbtn" disabled>Spielen</button></div>`}
+ else{b=`<div class="row">${pips()}<b>${S.cnt} / ${GOAL}</b></div><p style="margin-top:10px">Noch <b>${GOAL-S.cnt} richtige Antworten</b>, dann darfst du ${S.plays?'wieder ':''}spielen.</p>${nr?`<p>Beim nächsten Spielen reif: <b>${nr}</b></p>`:''}<div class="row"><button class="btn alt" data-act="look">Anschauen</button><button class="gbtn" disabled>Spielen</button></div>`}
  sheet(frame('Meine Farm',b),'welcome')}
-function open(){S.playing=true;viewOnly=false;S.swap=true;S.plays++;
+function open(){S.playing=true;try{const d=new Date();S.playDay=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}catch(e){}viewOnly=false;S.swap=true;S.plays++;
  for(const k in ANIM)if(S.up[k]&&S[k].fed){S[k].eggs+=ANIM[k].k+stg(k)-1;S[k].fed=false}
  S.oven.forEach(o=>o.ready=true);
  if(S.up.truck){if(S.truck&&S.plays>S.truck.until){S.truck.items.forEach(c=>{S.inv[c.g]=have(c.g)+c.f});S.truck=null;S.nextTruck=S.plays+1;setTimeout(()=>toast('Der Lieferwagen ist ohne volle Kisten weitergefahren. Deine Waren sind zurück im Lager.'),1500)}
-  if(!S.truck&&S.plays>=S.nextTruck){const pool=wantGoods().filter(g=>g!=='giant').sort(()=>Math.random()-.5).slice(0,3);const items=pool.map(g=>({g,q:3+rnd(4),f:0}));const val=items.reduce((a,c)=>a+c.q*price(c.g),0);S.truck={items,reward:Math.round(val*2.5/10)*10,until:S.plays+1};setTimeout(()=>toast('Der Lieferwagen ist da! Fülle seine Kisten.'),1500)}}let g=0;S.fields.forEach(f=>{if(f.c){f.g++;g++}});(S.trees||[]).forEach(t=>{if(t.k){t.g++;g++}});
- S.orders.forEach(o=>o.age++);S.orders=S.orders.filter(o=>o.tut||o.age<2);fillOrders();
+  if(!S.truck&&S.plays>=S.nextTruck){const pool=wantGoods().filter(g=>g!=='giant'&&g!=='feed').sort(()=>Math.random()-.5).slice(0,3);const items=pool.map(g=>({g,q:Math.round((3+rnd(4))*(1+.06*(S.lv-1))),f:0}));const val=items.reduce((a,c)=>a+c.q*price(c.g),0);S.truck={items,reward:Math.round(val*2.5/10)*10,until:S.plays+1};setTimeout(()=>toast('Der Lieferwagen ist da! Fülle seine Kisten.'),1500)}}let g=0;S.fields.forEach(f=>{if(f.c){f.g++;g++}});(S.trees||[]).forEach(t=>{if(t.k){t.g++;g++}});
+ S.orders.forEach(o=>o.age++);S.orders=S.orders.filter(o=>o.tut||o.age<(o.chain?3:2));fillOrders();
  if(!S.tutDone){render();startTut();return}toast(g?'Deine Pflanzen sind gewachsen!':'Viel Spaß auf der Farm!');render()}
 function harvest(i){const f=S.fields[i],c=f.c,n=yld(c,f.q||0),rc=rectOf($('o-f'+i));S.inv[c]=have(c)+n;let msg=`+${dq(c,n)}`;
  if(c==='pumpkin'&&Math.random()<.1){S.inv.giant=have('giant')+1;msg+=' und 1 Riesenkürbis!'}
@@ -1044,7 +1056,7 @@ const map=$('map');let dn=null,moved=false,lastKey='',lastT=0;
 let sweeping=false,pend=null;const sk=$('sickle');
 function sweepHit(t){const i=+t.dataset.i,f=S.fields[i];if(!f||!ready(f))return;harvest(i);toast(lastMsg);if(S.tut===4&&have('wheat')>=4)S.tut=5;render()}
 function skMove(e){sk.style.transform=`translate(${e.clientX-20}px,${e.clientY-44}px)`}
-map.addEventListener('pointerdown',e=>{if(!edit)return;const [ci,cj]=cellAt(e.clientX,e.clientY),ob=e.target.closest('.obj[data-mk]'),k=occ()[ci+','+cj]||(ob&&ob.dataset.mk);if(!k)return;drag={k,x:e.clientX,y:e.clientY,on:false};e.stopPropagation()},true);
+map.addEventListener('pointerdown',e=>{if(!edit)return;const [ci,cj]=cellAt(e.clientX,e.clientY),ob=e.target.closest('.obj[data-mk]'),k=occ()[ci+','+cj]||(ob&&ob.dataset.mk);if(!k||k!==edSel)return;drag={k,x:e.clientX,y:e.clientY,on:false};e.stopPropagation()},true);
 addEventListener('pointermove',e=>{if(!drag)return;if(!drag.on&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>10){drag.on=true;edSel=drag.k;render()}if(drag.on){const t=tgt(drag.k,cellAt(e.clientX,e.clientY));if(!drag.t||t[0]!==drag.t[0]||t[1]!==drag.t[1]){drag.t=t;ghost(drag.k,...t,tryPlace(drag.k,...t,false))}}},true);
 addEventListener('pointerup',e=>{if(!drag)return;const d=drag;drag=null;if(d.on){noClick=true;setTimeout(()=>noClick=false,80);ghost(null);if(d.t)doMove(d.k,...d.t)}},true);
 map.addEventListener('pointerdown',e=>{const t=e.target.closest('[data-act=field]');
@@ -1073,11 +1085,11 @@ function fit(){const z=Math.min(1,Math.max(innerHeight/1520,innerWidth/2180,.6,M
 $('ground').innerHTML=ground();
 {const r=seeded(3);let w='<svg viewBox="0 0 1500 1100" width="1500" height="1100"><rect width="1500" height="1100" fill="#eef6ff" opacity=".28"/>';for(let i=0;i<40;i++)w+=`<ellipse cx="${r()*1500}" cy="${r()*1100}" rx="${40+r()*110}" ry="${18+r()*40}" fill="#fff" opacity=".7"/>`;$('snow').innerHTML=w+'</svg>'}
 const z=fit();addEventListener('resize',fit);
-heroSkin();render();weather();initAnimals();if(S.house){hero.x=POS.house[0]+15;hero.y=POS.house[1]+100}if(Z!=='farm'){[hero.x,hero.y]=Z==='vieh'||Z==='obst'?[1200,930]:[210,895];actors.forEach(a=>a.el.style.display=(a.k==='hen'&&Z==='vieh')?'':'none')}heroPlace();
+heroSkin();render();weather();initAnimals();if(S.house){hero.x=POS.house[0]+15;hero.y=POS.house[1]+100}if(Z!=='farm'){[hero.x,hero.y]=Z==='vieh'||Z==='obst'?[1200,930]:[210,895];actors.forEach(a=>a.el.style.display=(a.k==='hen'&&Z==='vieh')?'':'none')}else actors.forEach(a=>{if(a.k==='hen')a.el.style.display='none'});heroPlace();
 if(Z==='farm'){map.scrollLeft=1095*z-innerWidth/2;map.scrollTop=835*z-innerHeight/2}else{const c=Z==='vieh'?[1250,920]:Z==='obst'?[1050,820]:[850,880];map.scrollLeft=c[0]*z-innerWidth/2;map.scrollTop=c[1]*z-innerHeight/2}
 if(WK){$('tbtnTest').hidden=!/[?&]test/.test(location.search);$('wkBack').hidden=false}
 if(INBOX){let ib={};try{ib=JSON.parse(localStorage.getItem(INBOX)||'{}')||{}}catch(e){}
- const days=Object.keys(ib).sort();if(days.length){if(S.playing)endSession();let seeds=0,got=0;
+ const days=Object.keys(ib).sort();if(days.length){if(S.playing&&S.playDay&&days.some(d=>d>S.playDay))endSession();let seeds=0,got=0;
   for(const d of days){const {e=0,h=0}=ib[d]||{};if(S.dayStr!==d){S.dayStr=d;S.day++;S.learned=false;S.ans=0}
    let half=0;for(let k=0;k<e+h;k++){const v=k<e?1:2;half+=S.ans<CAP?v*2:v;S.ans++}S.frac+=half;const sd=Math.floor(S.frac/2);S.frac-=sd*2;S.seeds+=sd;seeds+=sd;got+=e+h;
    if(!S.learned){S.learned=true;S.parcels=Math.min(3,S.parcels+1)}

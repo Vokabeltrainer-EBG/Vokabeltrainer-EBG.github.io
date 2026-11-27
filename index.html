@@ -396,7 +396,7 @@ function farmState(){let f=null,ib={};try{f=JSON.parse(localStorage.getItem(FARM
   if(f&&f.unlocked&&!f.playing)return{ready:true,n:FARM_GOAL};
   const base=f&&!f.playing?(f.cnt||0):0;const n=Math.min(FARM_GOAL,base+pend);return{ready:n>=FARM_GOAL,n,playing:!!(f&&f.playing&&!pend)}}
 function farmCard(){const f=farmState();
-  return `<a class="card farmcard" href="farm/"><img src="farm/assets/i-wheat.png" alt=""><div><div class="eyebrow">Belohnung</div><b>Deine Farm</b><div class="muted small">${f.ready?"Freigeschaltet – du darfst spielen!":f.playing?"Du spielst gerade. Mach auf der Farm Feierabend, dann zählen neue Antworten.":`${f.n} / ${FARM_GOAL} richtige Antworten bis zum Spielen · anschauen geht immer`}</div><div class="fbar"><i style="width:${Math.round(100*f.n/FARM_GOAL)}%"></i></div></div><span class="btn ${f.ready?"primary":"ghost"}">${f.ready?"Spielen":"Ansehen"}</span></a>`}
+  return `<a class="card farmcard" href="farm/"><img src="farm/assets/i-wheat.png" alt=""><div><div class="eyebrow">Belohnung</div><b>Deine Farm</b><div class="muted small">${f.ready?"Freigeschaltet – du darfst spielen!":f.playing?"Du spielst gerade. Neue Antworten bringen Samen; für die nächsten 60 zählen sie nach dem Feierabend (oder ab morgen).":`${f.n} / ${FARM_GOAL} richtige Antworten bis zum Spielen · anschauen geht immer`}</div><div class="fbar"><i style="width:${Math.round(100*f.n/FARM_GOAL)}%"></i></div></div><span class="btn ${f.ready?"primary":"ghost"}">${f.ready?"Spielen":"Ansehen"}</span></a>`}
 function grade(wid,mid,ok,free){
   const p=Object.assign({},P(wid,mid)); const before=p.box;
   if(ok)p.r++;else p.f++;

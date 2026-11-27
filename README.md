@@ -33,3 +33,9 @@ In `src/app.html` bei `PROFILES` eintragen, Ordner `<kind>/lektionen/` anlegen, 
 Englisch ; Deutsch ; Satz Englisch ; Satz Deutsch ; Formen (go - went - gone)
 ```
 Mehrere richtige Antworten mit `/`. Das Zielwort muss wörtlich im englischen Satz stehen (führendes „to“ wird ignoriert). Veröffentlichte Lektionen nicht umbenennen, sonst geht der Lernstand verloren.
+
+## Farm (Belohnungsspiel)
+- Ordner `farm/` (Spiel + Bilder). Wird mit `python3 tools/build_farm.py <Farm-Quellordner>` erzeugt – nicht von Hand ändern.
+- Jede richtige Antwort im Wortkasten landet in `farm-<kind>.inbox` (pro Tag, leicht/schwer getrennt). Die Farm übernimmt sie beim Öffnen: Samen (leicht 1, schwer 2, ab 30 Antworten am Tag halb) und Zähler bis 60 → Spielen freigeschaltet.
+- Spielstand: `farm-<kind>.v1`. Ohne Profil leitet die Farm zum Wortkasten zurück.
+- Testbereich der Farm nur mit `farm/?test`.

@@ -141,6 +141,7 @@ button,select,input,textarea{font:inherit;color:inherit}
 .icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .hero{background:var(--accent-soft);border-color:transparent}
 .hero .big{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,8vw,44px);line-height:1}
+a.card.farmcard{display:flex;flex-direction:row;align-items:center;gap:14px;justify-content:space-between;text-align:left;text-decoration:none;color:inherit}a.card.farmcard>div{flex:1;min-width:0}a.card.farmcard>img{width:56px;height:56px;object-fit:contain;flex:none}.farmcard .fbar{height:8px;border-radius:4px;background:rgba(0,0,0,.08);margin-top:8px;overflow:hidden}.farmcard .fbar i{display:block;height:100%;background:#e0a526}
 .tile-btn{text-align:left;align-items:flex-start;justify-content:flex-start;flex-direction:column;gap:2px;padding:16px;min-height:84px}
 .tile-btn span{font-weight:400;color:var(--muted);font-size:14px}
 .bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--b0)}
@@ -386,6 +387,16 @@ function basisStartedToday(){
   const t=today(); return S.words.filter(w=>isBasis(w.lesson)&&first[w.id]===t).length;
 }
 
+/* ---------- Farm: richtige Antworten an die Farm weitergeben ---------- */
+const FARM_GOAL=60, FARM_KEY="farm-"+PID+".v1", FARM_INBOX="farm-"+PID+".inbox";
+function farmAdd(hard){try{const d=new Date(),k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  const ib=JSON.parse(localStorage.getItem(FARM_INBOX)||"{}")||{};const e=ib[k]||(ib[k]={e:0,h:0});if(hard)e.h++;else e.e++;localStorage.setItem(FARM_INBOX,JSON.stringify(ib))}catch(e){}}
+function farmState(){let f=null,ib={};try{f=JSON.parse(localStorage.getItem(FARM_KEY)||"null");ib=JSON.parse(localStorage.getItem(FARM_INBOX)||"{}")||{}}catch(e){}
+  const pend=Object.values(ib).reduce((a,x)=>a+(x.e||0)+(x.h||0),0);
+  if(f&&f.unlocked&&!f.playing)return{ready:true,n:FARM_GOAL};
+  const base=f&&!f.playing?(f.cnt||0):0;const n=Math.min(FARM_GOAL,base+pend);return{ready:n>=FARM_GOAL,n,playing:!!(f&&f.playing&&!pend)}}
+function farmCard(){const f=farmState();
+  return `<a class="card farmcard" href="farm/"><img src="farm/assets/i-wheat.png" alt=""><div><div class="eyebrow">Belohnung</div><b>Deine Farm</b><div class="muted small">${f.ready?"Freigeschaltet – du darfst spielen!":f.playing?"Du spielst gerade. Mach auf der Farm Feierabend, dann zählen neue Antworten.":`${f.n} / ${FARM_GOAL} richtige Antworten bis zum Spielen · anschauen geht immer`}</div><div class="fbar"><i style="width:${Math.round(100*f.n/FARM_GOAL)}%"></i></div></div><span class="btn ${f.ready?"primary":"ghost"}">${f.ready?"Spielen":"Ansehen"}</span></a>`}
 function grade(wid,mid,ok,free){
   const p=Object.assign({},P(wid,mid)); const before=p.box;
   if(ok)p.r++;else p.f++;
@@ -396,6 +407,7 @@ function grade(wid,mid,ok,free){
   }
   (S.prog[wid]=S.prog[wid]||{})[mid]=p;
   S.log.push({t:Date.now(),w:wid,m:mid,ok:ok?1:0,f:free?1:0});
+  if(ok) farmAdd(MODES0.find(m=>m.id===mid)?.group==="schwer");
   if(S.log.length>8000) S.log.splice(0,S.log.length-8000);
   save();
   return {before,after:p.box};
@@ -600,6 +612,7 @@ function vHome(){
     <p class="muted">${empty?"Neue Lektionen erscheinen hier automatisch, sobald sie bereitstehen.":`${st?`${st} ${st===1?"Tag":"Tage"} in Folge gelernt. ${flame(st)}`:"Starte heute deine Lernserie."} ${due?"":"Morgen kommen neue Wörter dran."}`}</p>
     <button class="btn primary wide" data-act="start" ${due?"":"disabled"}>Los geht’s</button>
   </section>
+  ${farmCard()}
   <div class="grid3 g4">
     <button class="btn tile-btn" data-act="go" data-v="practice">Gezielt üben<span>Lektion und Lernmodus selbst wählen</span></button>
     <button class="btn tile-btn" data-act="go" data-v="testsetup">Vokabeltest<span>Buchseiten wählen, Test schreiben, sofort korrigiert</span></button>

@@ -395,6 +395,8 @@ function farmState(){let f=null,ib={};try{f=JSON.parse(localStorage.getItem(FARM
   const pend=Object.values(ib).reduce((a,x)=>a+(x.e||0)+(x.h||0),0);
   if(f&&f.unlocked&&!f.playing)return{ready:true,n:FARM_GOAL};
   const base=f&&!f.playing?(f.cnt||0):0;const n=Math.min(FARM_GOAL,base+pend);return{ready:n>=FARM_GOAL,n,playing:!!(f&&f.playing&&!pend)}}
+function farmDone(n){if(!n)return"";const f=farmState();
+  return `<a class="card farmcard" href="farm/"><img src="farm/assets/i-wheat.png" alt=""><div><div class="eyebrow">Für deine Farm</div><b>+${n} richtige Antworten</b><div class="muted small">${f.ready?"Geschafft – du darfst jetzt auf deiner Farm spielen!":f.playing?"Das gibt neue Samen für deine Farm.":`Noch ${FARM_GOAL-f.n} bis zum Spielen (${f.n} / ${FARM_GOAL}).`}</div><div class="fbar"><i style="width:${Math.round(100*f.n/FARM_GOAL)}%"></i></div></div><span class="btn ${f.ready?"primary":"ghost"}">${f.ready?"Spielen":"Ansehen"}</span></a>`}
 function farmCard(){const f=farmState();
   return `<a class="card farmcard" href="farm/"><img src="farm/assets/i-wheat.png" alt=""><div><div class="eyebrow">Belohnung</div><b>Deine Farm</b><div class="muted small">${f.ready?"Freigeschaltet – du darfst spielen!":f.playing?"Du spielst gerade. Neue Antworten bringen Samen; für die nächsten 60 zählen sie nach dem Feierabend (oder ab morgen).":`${f.n} / ${FARM_GOAL} richtige Antworten bis zum Spielen · anschauen geht immer`}</div><div class="fbar"><i style="width:${Math.round(100*f.n/FARM_GOAL)}%"></i></div></div><span class="btn ${f.ready?"primary":"ghost"}">${f.ready?"Spielen":"Ansehen"}</span></a>`}
 function grade(wid,mid,ok,free){
@@ -812,6 +814,7 @@ function vDone(){
   <section class="card hero"><div class="eyebrow">Runde beendet</div><div class="big tnum">${s.ok} von ${s.n} richtig</div>
   <p>${pct>=80?"Starke Runde!":pct>=50?"Gut gemacht, dranbleiben!":"Die schweren Wörter kommen bald wieder – so lernst du sie."}</p>
   ${s.free?`<p class="muted small">Freies Üben: Die Fächer haben sich nicht verändert.</p>`:`<p class="muted small tnum">${s.up} Mal ein Fach weiter, ${s.down} Mal zurück in Fach 1.</p>`}</section>
+  ${farmDone(s.ok)}
   <div class="grid2">${due&&!s.free?`<button class="btn primary" data-act="start">Noch eine Runde (${due})</button>`:""}<button class="btn" data-act="go" data-v="home">Zur Übersicht</button></div>`;
 }
 

@@ -113,6 +113,28 @@ button,html{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .hud{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px max(3vw,10px) 16px;background:linear-gradient(rgba(20,40,5,.45),transparent);pointer-events:none}
 .hud>*{pointer-events:auto}
 .hud .wkback .lbl{}@media(max-width:900px){.hud .wkback .lbl{display:none}}.rb .c{display:flex;align-items:center;justify-content:center}.line.keep{background:rgba(224,165,38,.14);border-radius:14px;padding:8px}
+.fx{position:absolute;z-index:3000;pointer-events:none;transform:translate(-50%,-100%);line-height:1}
+.fx .em{display:block;text-align:center}
+.fx.say span{display:block;background:#fffaf0;color:#3b2a14;border-radius:16px;padding:7px 14px;font:700 16px/1.2 inherit;box-shadow:0 2px 0 rgba(0,0,0,.25);white-space:nowrap;animation:popIn .25s ease-out}
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.fx.splash .em{font-size:54px;animation:spl .9s ease-out forwards}@keyframes spl{0%{transform:scale(.3);opacity:0}30%{opacity:1}100%{transform:scale(1.4);opacity:0}}
+.fx.bub .em{font-size:26px;animation:bub 1.4s ease-in forwards}@keyframes bub{from{transform:translateY(0);opacity:1}to{transform:translateY(-50px);opacity:0}}
+#heroEl.sink .hs{animation:sink .9s ease-in forwards}@keyframes sink{30%{transform:translateY(-14px) rotate(-8deg)}100%{transform:translateY(46px) rotate(4deg);opacity:0}}
+#heroEl.wet .hs{filter:saturate(.7) brightness(.9) hue-rotate(-8deg)}#heroEl.wet::after{content:'💧';position:absolute;left:30%;top:-14px;font-size:18px;animation:drip 1s linear infinite}
+@keyframes drip{from{transform:translateY(0);opacity:1}to{transform:translateY(40px);opacity:0}}
+#heroEl.dizzy .hs{animation:spin .8s ease-in-out 2}@keyframes spin{to{transform:rotate(360deg)}}
+#heroEl.hop .hs,.act.hop img{animation:ehop .3s ease-out}@keyframes ehop{50%{transform:translateY(-10px)}}
+.obj.wob>svg{animation:wob .5s ease-in-out 3;transform-origin:50% 100%}@keyframes wob{25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+.fx.crow .em{font-size:30px;animation:crow 1.8s ease-in forwards}@keyframes crow{to{transform:translate(var(--cx),-260px) scale(.6);opacity:0}}
+.fx.dig .em{font-size:34px;animation:dig 1.6s ease-out forwards}@keyframes dig{0%{transform:translateY(10px) scale(.3);opacity:0}25%{transform:translateY(-30px) scale(1.1);opacity:1}80%{opacity:1}100%{transform:translateY(-40px);opacity:0}}
+#o-duck>svg{animation:swim 9s ease-in-out infinite}@keyframes swim{0%,100%{transform:translateX(-60px)}48%{transform:translateX(60px)}50%{transform:translateX(60px) scaleX(-1)}98%{transform:translateX(-60px) scaleX(-1)}}
+#o-duck.dive>svg{animation:none;opacity:0;transition:opacity .8s}
+#o-clover>svg{animation:twinkle 2.4s ease-in-out infinite}@keyframes twinkle{50%{filter:brightness(1.25)}}
+#ff{position:absolute;inset:0;pointer-events:none;z-index:2900}#ff i{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff6a0;box-shadow:0 0 10px 4px rgba(255,240,120,.7);animation:ffly 6s ease-in-out infinite}
+@keyframes ffly{0%,100%{transform:translate(0,0);opacity:.2}25%{opacity:1}50%{transform:translate(30px,-24px);opacity:.4}75%{transform:translate(-20px,-40px);opacity:1}}
+.lglow{position:absolute;width:150px;height:110px;border-radius:50%;background:radial-gradient(rgba(255,220,120,.55),rgba(255,220,120,0) 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:2800}
+.alb .card2.sec .em{font-size:40px;display:block;height:54px;line-height:54px}
+@media(prefers-reduced-motion:reduce){#o-duck>svg,#o-clover>svg,#ff i{animation:none}}
 .status{flex:1 1 220px;display:flex;align-items:center;gap:10px;flex-wrap:nowrap}.status .gbtn{white-space:nowrap}@media(max-width:900px){.status .lbl{display:none}.status .gbtn{padding-left:14px;padding-right:14px}}
 .pills{display:flex;gap:8px;margin-left:auto}
 .pill{display:flex;align-items:center;gap:6px;background:rgba(40,25,5,.5);border-radius:999px;padding:3px 14px 3px 4px;font-size:22px;white-space:nowrap}
@@ -690,7 +712,7 @@ function zonesHTML(){return frame('Gebiete',ZORD.map(k=>{const z=ZONES[k],open=k
  const ok=z.c&&S.lv>=z.lv&&S.coins>=z.c&&Object.entries(z.need||{}).every(([g,n])=>have(g)>=n);
  const why=!z.c?'':S.lv<z.lv?`Erst ab Level ${z.lv}.`:S.coins<z.c?`Dir fehlen noch ${z.c-S.coins} Taler.`:(()=>{const m=Object.entries(z.need||{}).find(([g,n])=>have(g)<n);return m?`Dir fehlen noch ${dq(m[0],m[1]-have(m[0]))}.`:''})();
  return`<div class="line"><span class="grow"><b>${z.n}</b>${Z===k?' <span class="ok">· du bist hier</span>':''}<br><span class="small mute">${z.d}${!open&&!z.soon?`<br>Freischalten: ${req}`:''}</span></span>${z.soon?'<span class="lock">kommt bald</span>':open?(Z===k?'':`<button class="btn gold" data-act="goZone" data-z="${k}">Hingehen</button>`):`<button class="btn" data-act="zoneBuy" data-z="${k}" ${dis(ok,why)}>Freischalten</button>`}</div>`}).join(''))}
-function setZone(z){Z=S.area=z;PATHS=ZPATH[z]();PATHP=PATHS[0];DECO=mkDeco(z);gdynKey='';$('ground').innerHTML=ground();if(typeof actors!=='undefined')actors.forEach(a=>a.el.style.display=(a.k==='dog'?z==='farm':a.k==='hen'?z==='vieh':z==='farm')?'':'none');render()}
+function setZone(z){Z=S.area=z;if(z==='farm'&&!EGG.night)EGG.duck=EGG.duck||Math.random()<.05;setTimeout(nightFx,50);PATHS=ZPATH[z]();PATHP=PATHS[0];DECO=mkDeco(z);gdynKey='';$('ground').innerHTML=ground();if(typeof actors!=='undefined')actors.forEach(a=>a.el.style.display=(a.k==='dog'?z==='farm':a.k==='hen'?z==='vieh':z==='farm')?'':'none');render()}
 function goZone(z){if(z===Z)return hideSheet();hideSheet();const from=Z,ent=z==='farm'?(from==='vieh'?[380,470]:from==='obst'?[560,400]:[900,330]):z==='mill'?[210,895]:[1200,930],cam=z==='farm'?(from==='vieh'?[700,640]:from==='obst'?[800,600]:[1250,520]):z==='mill'?[850,880]:z==='obst'?[1050,820]:[1250,920];const fd=$('fade');fd.classList.add('on');
  setTimeout(()=>{setZone(z);hero.x=ent[0];hero.y=ent[1];heroPlace();$('heroEl').classList.remove('gone');const zz=fit(),m=$('map');m.scrollLeft=cam[0]*zz-innerWidth/2;m.scrollTop=cam[1]*zz-innerHeight/2;fd.classList.remove('on');toast(ZONES[z].n)},RM?0:260)}
 let edit=false,edSel=null;
@@ -766,7 +788,7 @@ function shopHTML(){
  const slot=`<div class="line">${ico('board','big')}<span class="grow"><b>Auftragsbrett</b><br><span class="small mute">${S.slots} Aufträge pro Runde · +1 Platz</span></span><button class="btn" data-act="buySlot" ${dis(S.house&&S.coins>=sp())}>${coin(sp())}</button></div>`;
  const fl=S.fields.length<MAXF?`<button class="btn" data-act="buyField" ${dis(S.coins>=fp())}>Feld ${coin(fp())}</button>`:'<span class="ok">Alle Felder gekauft</span>';
  return frame('Shop',`${canAct()?'':'<p class="small mute">Kaufen kannst du nur beim Spielen.</p>'}<h4>Gebäude</h4>${hs}${u}${slot}<h4>Sorten</h4>${c}<h4>Deko <span class="small mute">(gegen Samen)</span></h4>${Object.entries(DEKO).map(([k,v])=>`<div class="line">${SPR['dk_'+k]?`<img class="big" src="${SPR['dk_'+k]}" alt="" style="object-fit:contain">`:`<svg class="big"><use href="#dk-${k}"/></svg>`}<span class="grow"><b>${v.n}</b></span>${S.deko[k]?'<span class="ok">✓ steht</span>':S.lv<v.lv?`<span class="lock">ab Level ${v.lv}</span>`:`<button class="btn" data-act="buyDeko" data-k="${k}" ${dis(S.seeds>=dSeed(v),`Dir fehlen noch ${dSeed(v)-S.seeds} Samen.`)}>${seedc(dSeed(v))}</button>`}</div>`).join('')}<h4>Felder</h4><div class="line"><span class="grow">Du hast ${S.fields.length} von ${MAXF} Feldern.</span>${fl}</div>`)}
-function testHTML(){return frame('Testbereich',`<div class="test"><p class="mute small">Tag ${S.day} · heute gelernt: ${S.learned?'ja':'nein'} · richtige Antworten fürs Spielen: ${S.cnt} / ${GOAL} · Antworten heute: ${S.ans} (ab ${CAP} halbe Samen) · Spielrunden: ${S.plays}</p><div class="row"><label>Leicht richtig <input id="easy" type="number" min="0" step="1" value="${tE}"></label><label>Schwer richtig <input id="hard" type="number" min="0" step="1" value="${tH}"></label></div><p class="small mute">Leicht = 1 Samen · schwer = 2 Samen · ab ${CAP} Antworten am Tag die Hälfte</p><div class="row"><button class="btn gold" data-act="learn">Lernrunde abschließen</button><button class="btn alt" data-act="nextDay">Nächster Tag ›</button></div><div class="row" style="margin-top:8px"><button class="btn alt" data-act="cheatUnlock">Sofort freischalten</button><button class="btn" data-act="cheatAll">Alles freischalten</button><button class="btn alt" data-act="cheatCoins">+100 Taler</button><button class="btn alt" data-act="cheatXp">+50 Sterne</button><button class="btn alt" data-act="resetAsk">Zurücksetzen</button></div></div>`)}
+function testHTML(){return frame('Testbereich',`<div class="test"><p class="mute small">Tag ${S.day} · heute gelernt: ${S.learned?'ja':'nein'} · richtige Antworten fürs Spielen: ${S.cnt} / ${GOAL} · Antworten heute: ${S.ans} (ab ${CAP} halbe Samen) · Spielrunden: ${S.plays}</p><div class="row"><label>Leicht richtig <input id="easy" type="number" min="0" step="1" value="${tE}"></label><label>Schwer richtig <input id="hard" type="number" min="0" step="1" value="${tH}"></label></div><p class="small mute">Leicht = 1 Samen · schwer = 2 Samen · ab ${CAP} Antworten am Tag die Hälfte</p><div class="row"><button class="btn gold" data-act="learn">Lernrunde abschließen</button><button class="btn alt" data-act="nextDay">Nächster Tag ›</button></div><div class="row" style="margin-top:8px"><button class="btn alt" data-act="cheatUnlock">Sofort freischalten</button><button class="btn alt" data-act="eggTest">Geheimnisse zeigen</button><button class="btn" data-act="cheatAll">Alles freischalten</button><button class="btn alt" data-act="cheatCoins">+100 Taler</button><button class="btn alt" data-act="cheatXp">+50 Sterne</button><button class="btn alt" data-act="resetAsk">Zurücksetzen</button></div></div>`)}
 const PANELS={zones:()=>zonesHTML(),anim_coop:()=>animHTML('coop'),anim_cow:()=>animHTML('cow'),shop:shopHTML,store:storeHTML,prod_mill:()=>prodHTML('mill'),prod_sugar:()=>prodHTML('sugar'),prod_press:()=>prodHTML('press'),prod_jam:()=>prodHTML('jam'),orders:ordersHTML,test:testHTML,quiz:quizHTML,bake:bakeHTML,truck:truckHTML,album:albumHTML};
 
 /* ---------- Anleitung ---------- */
@@ -822,7 +844,7 @@ function gdyn(){const key=[Z,S.fields.length,S.house,Object.keys(S.up).sort().jo
 function render(){S.lv=lvOf(S.xp);gdyn();for(const k in S.inv)if(S.inv[k]>0)S.seen[k]=true;$('pLv').innerHTML=lvBox();
  countTo('coins',S.coins);countTo('seeds',S.seeds);
  if(S.coins!==prev.c)bump('pCoin');if(S.seeds!==prev.s)bump('pSeed');prev={c:S.coins,s:S.seeds};
- $('status').innerHTML=statusHTML();{const de_=$('dEdit');if(de_)de_.hidden=!canAct()||edit||S.tut!=null}$('objs').innerHTML=objsHTML();showGrid();document.body.classList.toggle('hassel',!!edSel);
+ $('status').innerHTML=statusHTML();{const de_=$('dEdit');if(de_)de_.hidden=!canAct()||edit||S.tut!=null}$('objs').innerHTML=objsHTML()+eggObjs();gnomeShift();showGrid();document.body.classList.toggle('hassel',!!edSel);
  const gb=goalBox();$('goal').hidden=!gb;$('goal').innerHTML=gb;
  const ready_n=S.fields.filter(ready).length,free=S.fields.filter(f=>!f.c).length;
  
@@ -840,7 +862,7 @@ function bakeHTML(){const sl=[...Array(1+stg('bakery')).keys()].map(i=>{const o=
 function truckHTML(){const t=S.truck;if(!t)return frame('Lieferwagen','<p>Der Lieferwagen ist unterwegs.</p>');const full=t.items.every(c=>c.f>=c.q);
  return frame('Lieferwagen',`<p>Fülle alle Kisten bis ${t.until>S.plays?'zum nächsten Spielen':'Feierabend'}. Belohnung: ${coin(t.reward)} + doppelte Sterne + Abzeichen.</p>${t.items.map((c,i)=>`<div class="line">${ico(c.g,'big')}<span class="grow"><b>${c.f} / ${c.q}</b> ${DQ[c.g]?DQ[c.g][c.q===1?0:1]:de(c.g)}<div class="gbar"><i style="width:${(c.f/c.q*100).toFixed(0)}%"></i></div></span><button class="btn alt" data-act="load" data-i="${i}" ${dis(c.f<c.q&&have(c.g)>0)}>Einladen</button></div>`).join('')}<div class="row" style="margin-top:10px"><button class="gbtn" data-act="drive" ${dis(full)}>Losfahren!</button></div>${S.badges?`<p class="small mute">Abzeichen bisher: ${S.badges}</p>`:''}`)}
 function albumHTML(){const all=['wheat','carrot','beet','corn','pumpkin','straw','sun','flour','bread','sugar','cookies',...(S.zones.obst?['apple','cherry','pear','juice','jam']:[]),...(S.zones.vieh?['egg','milk']:[]),'cake','giant'];const n=all.filter(g=>S.seen[g]).length;
- return frame('Album',`<p class="small mute">${n} von ${all.length} Karten gesammelt. Tippe auf eine Karte, um das Wort zu hören.</p><div class="alb">${all.map(g=>S.seen[g]?`<button class="card2" data-act="sayW" data-w="${art(g)}">${ico(g==='giant'?'pumpkin':g,'')}<b>${art(g)}</b><span>${DQ[g]?'1 '+DQ[g][0]:G(g).de}</span></button>`:`<div class="card2 off">${ico(g==='giant'?'pumpkin':g,'')}<b>?</b><span>noch nicht</span></div>`).join('')}</div>${S.badges?`<h4>Abzeichen</h4><p>${'<svg class="ico"><use href="#crate"/></svg>'.repeat(Math.min(S.badges,20))} ${S.badges}× Lieferwagen</p>`:''}`)}
+ return frame('Album',`<p class="small mute">${n} von ${all.length} Karten gesammelt. Tippe auf eine Karte, um das Wort zu hören.</p><div class="alb">${all.map(g=>S.seen[g]?`<button class="card2" data-act="sayW" data-w="${art(g)}">${ico(g==='giant'?'pumpkin':g,'')}<b>${art(g)}</b><span>${DQ[g]?'1 '+DQ[g][0]:G(g).de}</span></button>`:`<div class="card2 off">${ico(g==='giant'?'pumpkin':g,'')}<b>?</b><span>noch nicht</span></div>`).join('')}</div><h4>Geheimnisse <span class="small mute">${SECRETS.filter(q=>(S.sec||{})[q[0]]).length} von ${SECRETS.length}</span></h4><div class="alb">${SECRETS.map(([k,em,n,t])=>(S.sec||{})[k]?`<div class="card2 sec"><span class="em">${em}</span><b>${n}</b><span>${t}</span></div>`:`<div class="card2 sec off"><span class="em">❔</span><b>?</b><span>noch geheim</span></div>`).join('')}</div>${S.badges?`<h4>Abzeichen</h4><p>${'<svg class="ico"><use href="#crate"/></svg>'.repeat(Math.min(S.badges,20))} ${S.badges}× Lieferwagen</p>`:''}`)}
 function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 function quizHTML(){const o=S.orders[quizI];if(!o)return frame('Auftrag','');
  if(!o.ch){const want=o.items.map(it=>it.g);const T0=Math.max(...want.map(TIER)),pool=goods().filter(g=>g!=='giant'&&g!=='feed'&&!want.includes(g)).sort((a,b)=>(Math.abs(TIER(a)-T0)-Math.abs(TIER(b)-T0))+(Math.random()-.5)*1.5);o.ch=[...want,...pool].slice(0,Math.max(4,want.length+2)).sort(()=>Math.random()-.5)}
@@ -880,7 +902,53 @@ function initAnimals(){if(!SPR.hen||RM)return;
   }
   requestAnimationFrame(step)};requestAnimationFrame(step)}
 function dogTo(x,y){const d=actors.find(a=>a.k==='dog');if(!d)return;d.tx=x;d.ty=y;d.st='walk';d.h=57;d.el.style.height='57px';setImg(d,'dogRun1');d.el.classList.toggle('flip',x<d.x)}
-function dogFollow(x,y){if(!inF([x,y]))[x,y]=clampIn([x,y]);const d=actors.find(a=>a.k==='dog');if(!d||Math.random()<.4)return;d.back=0;setTimeout(()=>dogTo(x+35,y+18),300)}
+function dogFollow(x,y){if(typeof inPond==='function'&&inPond(x,y)){x=PONDP[0]-170;y=PONDP[1]+20}if(!inF([x,y]))[x,y]=clampIn([x,y]);const d=actors.find(a=>a.k==='dog');if(!d||Math.random()<.4)return;d.back=0;setTimeout(()=>dogTo(x+35,y+18),300)}
+
+/* ---------- Easter Eggs ---------- */
+const SECRETS=[['bath','🛁','Badetag','Ist in den Teich gefallen.'],['dizzy','💫','Schwindelig','Den Gärtner zehnmal schnell angetippt.'],['crows','🐦‍⬛','Krähenalarm','Die Vogelscheuche geärgert.'],['bone','🦴','Knochenfund','Der Hund hat etwas ausgegraben.'],['coin','🪙','Hundeschatz','Der Hund hat eine Münze gefunden.'],['duck','🦆','Die seltene Ente','Die Ente im Teich entdeckt.'],['gnome','🧙','Hallo, Zwerg!','Mit dem Gartenzwerg gesprochen.'],['giant','🎃','Riesenernte','Ein Riesengemüse geerntet.'],['clover','🍀','Glücksklee','Ein vierblättriges Kleeblatt gefunden.'],['night','✨','Glühwürmchen','Abends auf der Farm gewesen.'],['rooster','🐓','Goldener Hahn','7 Tage hintereinander gelernt.']];
+const secret=k=>{if(!S.sec)S.sec={};if(S.sec[k])return;S.sec[k]=true;save();const x=SECRETS.find(q=>q[0]===k);setTimeout(()=>toast(`Geheimnis entdeckt: ${x[2]}! Schau ins Album.`),1300)};
+const eg=(k,em,sz)=>SPR[k]?`<img src="${SPR[k]}" alt="" style="width:${sz}px;display:block">`:`<span class="em" style="font-size:${sz*.8|0}px">${em}</span>`;
+const egSVG=(k,em,sz)=>SPR[k]?`<image href="${SPR[k]}" x="${-sz/2}" y="${-sz}" width="${sz}" height="${sz}"/>`:`<text x="0" y="-6" font-size="${sz*.8|0}" text-anchor="middle">${em}</text>`;
+function fx(x,y,html,cls,ms){const d=document.createElement('div');d.className='fx '+cls;d.style.left=x+'px';d.style.top=y+'px';d.style.zIndex=3000+Math.round(y);d.innerHTML=html;$('wi').appendChild(d);setTimeout(()=>d.remove(),ms);return d}
+const say=(x,y,t,ms=2200)=>fx(x,y,`<span>${t}</span>`,'say',ms);
+const EGG={busy:false,taps:[],sc:[],duck:false,gi:0};
+const dayNo=()=>WK?Math.round((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5):S.day;
+function noteLearn(n){if(!S.lday||n>S.lday){S.lstk=S.lday&&n-S.lday===1?(S.lstk||0)+1:1;S.lday=n}}
+const roosterOn=()=>(S.lstk||0)>=7&&dayNo()-S.lday<=1;
+const inPond=(x,y)=>Z==='farm'&&((x-PONDP[0])/150)**2+((y-PONDP[1])/62)**2<1;
+function worldTap(x,y){if(EGG.busy)return;
+ if(Math.abs(x-hero.x)<30&&y>hero.y-82&&y<hero.y+10&&!$('heroEl').classList.contains('gone'))return heroTap();
+ const d=typeof actors!=='undefined'&&actors.find(a=>a.k==='dog'&&a.el.style.display!=='none');if(d&&Math.abs(x-d.x)<42&&y>d.y-58&&y<d.y+10)return dogTap(d);
+ walkTo(x,y,inPond(x,y)?pondDunk:undefined)}
+function pondDunk(){if(!inPond(hero.x,hero.y))return;EGG.busy=true;const h=$('heroEl'),x=hero.x,y=hero.y;
+ fx(x,y+6,eg('splash','💦',70),'splash',1000);setTimeout(()=>fx(x,y,eg('bubbles','🫧',30),'bub',1500),500);h.classList.add('sink');
+ setTimeout(()=>{h.classList.remove('sink');hero.x=POS.house[0]+15;hero.y=POS.house[1]+100;heroPlace();h.classList.add('wet');if(SPR.farmerWet)frame2('farmerWet');
+  $('o-house')?.scrollIntoView({behavior:RM?'auto':'smooth',block:'center',inline:'center'});say(hero.x,hero.y-80,'Brrr … nass!');dogFollow(hero.x,hero.y);secret('bath');
+  setTimeout(()=>{if(SPR.farmerShake)frame2('farmerShake');setTimeout(()=>{h.classList.remove('wet');frame2('farmer');EGG.busy=false},900)},2600)},1000)}
+function heroTap(){const t=Date.now();EGG.taps=EGG.taps.filter(q=>t-q<4000);EGG.taps.push(t);const h=$('heroEl');
+ if(EGG.taps.length>=10){EGG.taps=[];EGG.busy=true;h.classList.add('dizzy');if(SPR.farmerDizzy)frame2('farmerDizzy');else fx(hero.x,hero.y-70,'<span class="em" style="font-size:28px">💫</span>','bub',1800);say(hero.x,hero.y-84,'Ich hab doch zu tun!');secret('dizzy');setTimeout(()=>{h.classList.remove('dizzy');frame2('farmer');EGG.busy=false},1800);return}
+ h.classList.remove('hop');void h.offsetWidth;h.classList.add('hop')}
+function dogTap(d){say(d.x,d.y-56,'Wuff!',1400);d.el.classList.remove('hop');void d.el.offsetWidth;d.el.classList.add('hop');
+ if(d.st!=='lie'||Math.random()>.35)return;setTimeout(()=>{fx(d.x+20,d.y+4,eg('dirt','🟫',34),'dig',1600);
+  const today=dayNo(),coin=canAct()&&S.dogCoin!==today&&Math.random()<.25;
+  if(coin){S.dogCoin=today;S.coins+=5;fx(d.x+20,d.y-6,'<svg style="width:34px;height:34px"><use href="#coin"/></svg>','dig',1600);toast('+5 Taler – der Hund hat eine Münze ausgegraben!');secret('coin');render()}
+  else{fx(d.x+20,d.y-6,eg('bone','🦴',40),'dig',1600);toast('Der Hund hat einen Knochen ausgegraben.');secret('bone')}},700)}
+function dekoTap(k){const el=$('o-d'+k);if(el){el.classList.remove('wob');void el.offsetWidth;el.classList.add('wob')}const [x,y]=DEKO[k].pos;
+ if(k==='gnome'){const P=['Good morning, farmer!','Nice carrots!','Have you learned your words today?','I like your pond.','What a lovely day!','Hello! I am a garden gnome.','Don’t forget to water the plants!'];say(x,y-70,P[EGG.gi++%P.length],2600);secret('gnome');return}
+ if(k==='scarecrow'){const t=Date.now();EGG.sc=EGG.sc.filter(q=>t-q<3000);EGG.sc.push(t);if(EGG.sc.length>=3){EGG.sc=[];[0,1,2].forEach(i=>{const f=fx(x-10+i*16,y-80,eg('crow'+(i+1),'🐦‍⬛',36),'crow',2000);f.style.setProperty('--cx',(i-1)*90+'px');f.firstChild.style.animationDelay=i*.15+'s'});say(x,y-110,'Kraah!',1500);secret('crows')}}}
+function gnomeShift(){const g=$('o-dgnome');if(!g)return;const n=dayNo(),dx=((n*37)%5-2)*9,dy=((n*53)%3-1)*6;g.style.translate=`${dx}px ${dy}px`;const sv=g.querySelector('svg');if(sv)sv.style.transform=n%2?'scaleX(-1)':''}
+function nightFx(){const hr=new Date().getHours(),on=(hr>=20||hr<6||EGG.night)&&!RM;let f=$('ff');
+ if(!on||Z!=='farm'){if(f)f.remove();return}if(!f){f=document.createElement('div');f.id='ff';let h='';const r=seeded(7);for(let i=0;i<16;i++)h+=`<i style="left:${(120+r()*1260)|0}px;top:${(180+r()*800)|0}px;animation-delay:-${(r()*6).toFixed(1)}s;animation-duration:${(5+r()*4).toFixed(1)}s"></i>`;f.innerHTML=h;$('wi').appendChild(f)}
+ f.querySelectorAll('.lglow').forEach(e=>e.remove());if(S.deko.lamp){const [x,y]=DEKO.lamp.pos;f.insertAdjacentHTML('beforeend',`<div class="lglow" style="left:${x}px;top:${y-70}px"></div>`)}secret('night')}
+function eggObjs(){let s='';if(Z!=='farm')return s;
+ if(EGG.duck)s+=obj('o-duck',PONDP[0]+10,PONDP[1]+8,[90,70,56],egSVG('duck','🦆',56),'duck');
+ if(S.clover&&canAct())s+=obj('o-clover',S.clover[0],S.clover[1],[54,54,44],egSVG('clover','🍀',38),'clover');
+ if(S.house&&roosterOn())s+=obj('o-rooster',POS.house[0]-28,POS.house[1]-150,[50,56,52],egSVG('rooster','🐓',44),'rooster').replace(/z-index:\d+/,'z-index:'+(POS.house[1]+5));
+ return s}
+const EGGACT={duck:()=>{const o=$('o-duck');say(PONDP[0]+10,PONDP[1]-56,'Quack!',1400);secret('duck');if(o)o.classList.add('dive');setTimeout(()=>{EGG.duck=false;render()},1500)},
+ clover:()=>{if(!S.clover||!canAct())return;const rc=rectOf($('o-clover'));S.seeds+=10;S.clover=null;burst(rc,['star','leaf'],8,'+10');toast('Ein vierblättriges Kleeblatt! +10 Samen');secret('clover');render()},
+ rooster:()=>{say(POS.house[0]-28,POS.house[1]-200,'Kikeriki!',1500);secret('rooster')},
+ eggTest:()=>{EGG.duck=true;EGG.night=true;S.lstk=7;S.lday=dayNo();if(S.house){const [x,y]=rndSpot(760,700,300);S.clover=[x,y]}hideSheet();if(Z!=='farm')goZone('farm');toast('Ente, Kleeblatt, Hahn und Glühwürmchen sind da.');render();nightFx()}};
 /* ---------- Figur ---------- */
 const hero={x:575,y:500,raf:0};
 let gateEls=null;function gatesNear(){if(!gateEls||!gateEls.length||!gateEls[0].isConnected)gateEls=[...document.querySelectorAll('#ground .gate')];for(const g of gateEls){const near=Math.hypot(hero.x-+g.dataset.x,hero.y-+g.dataset.y)<110;if(near!==g.classList.contains('open'))g.classList.toggle('open',near)}}
@@ -945,7 +1013,7 @@ function welcome(){let b;const nr=nextReady();
  else if(S.unlocked)b=`<p>Du hast ${GOAL} richtige Antworten gesammelt. <b>Deine Farm ist freigeschaltet!</b></p>${nr?`<p>Reif sind: <b>${nr}</b></p>`:''}<div class="row"><button class="gbtn" data-act="play">Spielen</button><button class="btn alt" data-act="look">Nur anschauen</button></div>`;
  else{b=`<div class="row">${pips()}<b>${S.cnt} / ${GOAL}</b></div><p style="margin-top:10px">Noch <b>${GOAL-S.cnt} richtige Antworten</b>, dann darfst du ${S.plays?'wieder ':''}spielen.</p>${nr?`<p>Beim nächsten Spielen reif: <b>${nr}</b></p>`:''}<div class="row"><button class="btn alt" data-act="look">Anschauen</button><button class="gbtn" disabled>Spielen</button></div>`}
  sheet(frame('Meine Farm',b),'welcome')}
-function open(){S.playing=true;try{const d=new Date();S.playDay=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}catch(e){}viewOnly=false;S.swap=true;S.plays++;
+function open(){S.playing=true;S.clover=null;if(S.house&&Math.random()<.2){const [x,y]=rndSpot(760,700,320);if(!inPond(x,y))S.clover=[x,y]}EGG.duck=Math.random()<.05;try{const d=new Date();S.playDay=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}catch(e){}viewOnly=false;S.swap=true;S.plays++;
  for(const k in ANIM)if(S.up[k]&&S[k].fed){S[k].eggs+=ANIM[k].k+stg(k)-1;S[k].fed=false}
  S.oven.forEach(o=>o.ready=true);
  if(S.up.truck){if(S.truck&&S.plays>S.truck.until){S.truck.items.forEach(c=>{S.inv[c.g]=have(c.g)+c.f});S.truck=null;S.nextTruck=S.plays+1;setTimeout(()=>toast('Der Lieferwagen ist ohne volle Kisten weitergefahren. Deine Waren sind zurück im Lager.'),1500)}
@@ -953,7 +1021,8 @@ function open(){S.playing=true;try{const d=new Date();S.playDay=d.getFullYear()+
  S.orders.forEach(o=>o.age++);S.orders=S.orders.filter(o=>o.tut||o.age<(o.chain?3:2));fillOrders();
  if(!S.tutDone){render();startTut();return}toast(g?'Deine Pflanzen sind gewachsen!':'Viel Spaß auf der Farm!');render()}
 function harvest(i){const f=S.fields[i],c=f.c,n=yld(c,f.q||0),rc=rectOf($('o-f'+i));S.inv[c]=have(c)+n;let msg=`+${dq(c,n)}`;
- if(c==='pumpkin'&&Math.random()<.1){S.inv.giant=have('giant')+1;msg+=' und 1 Riesenkürbis!'}
+ if(c==='pumpkin'&&Math.random()<.1){S.inv.giant=have('giant')+1;msg+=' und 1 Riesenkürbis!';secret('giant')}
+ else if(c!=='pumpkin'&&Math.random()<.03){S.inv[c]+=2*n;msg=`Riesenernte! +${dq(c,3*n)}`;secret('giant')}
  f.h++;S.xp++;if(f.h>=CROPS[c].h)S.fields[i]=empty();else f.g=0;
  burst(rc,['star','leaf'],8,`+${n}`);fly(c,rc,$('dStore'),Math.min(n,6));lastMsg=msg;return n}
 function endSession(){S.playing=false;S.unlocked=false;viewOnly=true;S.cnt=0;if(!S.tutDone)S.tut=null}
@@ -972,7 +1041,8 @@ const act={
  ordersBtn:()=>{if(S.house){noteSel=null;return enter('house')}sheet(ordersHTML(),'orders')},
  collect:d=>{const k=d.k,A=ANIM[k],st=S[k];if(!canAct()||!st.eggs)return;const n=st.eggs,rc=rectOf(document.querySelector('[data-act=collect]'));S.inv[A.out]=have(A.out)+n;st.eggs=0;burst(rc,['star',A.out],8,`+${n}`);fly(A.out,rc,$('dStore'),Math.min(n,5));toast(`+${dq(A.out,n)}`);render()},
  bakeTake:()=>{if(!canAct())return;takeOven(rectOf(document.querySelector('[data-act=bakeTake]')));render()},
- bldTap:d=>toast(`${UPS[d.k].n}: ${UPS[d.k].d}`),
+ bldTap:d=>{if(/^deko-/.test(d.k))return dekoTap(d.k.slice(5));if(UPS[d.k])toast(`${UPS[d.k].n}: ${UPS[d.k].d}`)},
+ ...EGGACT,
  houseAsk:()=>{walkTo(POS.house[0]-51,POS.house[1]+45);{if(!canAct())return locked();sheet(frame('Haus bauen',`<div class="line">${bico('house')}<span class="grow">Mit dem Haus kannst du <b>Aufträge annehmen</b>.</span><button class="btn" data-act="buyHouse" ${dis(S.coins>=HOUSE)}>Bauen ${coin(HOUSE)}</button></div>`))}},
  buyHouse:()=>{hideSheet();if(!canAct())return locked();if(S.house||S.coins<HOUSE)return render();S.coins-=HOUSE;S.house=true;popId='o-house';
   if(S.tut===1){S.orders=[tutOrder()];S.tut=2;seedGift()}
@@ -1049,7 +1119,7 @@ const act={
  buyUp:d=>{const v=UPS[d.k];if(!canAct()||S.up[d.k]||S.coins<v.c||S.lv<v.lv||(v.need&&!v.need()))return;S.coins-=v.c;S.up[d.k]=true;popId='o-'+d.k;hideSheet();toast(`${v.n} gebaut`);render()},
  tutNext:()=>{hideSheet();S.tut=S.house?2:1;if(S.house&&!S.orders.some(o=>o.tut)){S.orders.unshift(tutOrder());if(S.orders.length>S.slots)S.orders.pop()}if(S.tut===2)seedGift();lastStep=-1;render()},
  tutDone:()=>{S.tut=null;S.tutDone=true;hideSheet();render()},
- learn:()=>{const e=Math.max(0,Math.floor(+($('easy')?.value)||0)),h=Math.max(0,Math.floor(+($('hard')?.value)||0));tE=e;tH=h;
+ learn:()=>{noteLearn(S.day);const e=Math.max(0,Math.floor(+($('easy')?.value)||0)),h=Math.max(0,Math.floor(+($('hard')?.value)||0));tE=e;tH=h;
   let half=0;for(let k=0;k<e+h;k++){const v=k<e?1:2;half+=S.ans<CAP?v*2:v;S.ans++}
   S.frac+=half;const s=Math.floor(S.frac/2);S.frac-=s*2;S.seeds+=s;
   let msg=`+${s} Samen`;if(!S.learned){S.learned=true;S.parcels=Math.min(3,S.parcels+1);msg+=' · ein Paket ist angekommen'}
@@ -1083,7 +1153,7 @@ document.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDef
  if(edit&&e.target.closest('#world')&&!e.target.closest('[data-act=editDone]')){e.stopPropagation();e.preventDefault();if(noClick)return;return edTap(e)}
  if(e.target.id==='sheet'){if(sheetName&&sheetName!=='album'||$('sheet').classList.contains('inside'))return;return act.close()}
  const b=e.target.closest('[data-act]');
- if(!b){if(e.target.closest('#world')&&$('sheet').hidden){const r=$('wi').getBoundingClientRect(),zz=r.width/1500;walkTo((e.clientX-r.left)/zz,(e.clientY-r.top)/zz)}return}
+ if(!b){if(e.target.closest('#world')&&$('sheet').hidden){const r=$('wi').getBoundingClientRect(),zz=r.width/1500;worldTap((e.clientX-r.left)/zz,(e.clientY-r.top)/zz)}return}
  if(b.disabled)return;if(b.getAttribute('aria-disabled')){toast(whyNot(b));return}const a=b.dataset.act,f=act[a];if(!f)return;
  const key=a+JSON.stringify(b.dataset),now=Date.now();if(!NODEB.has(a)){if(key===lastKey&&now-lastT<450)return;lastKey=key;lastT=now}
  if(S.tut>=1&&S.tut<=5&&canAct()&&!ALWAYS.has(a)&&!TUT[S.tut].ok(a,b.dataset))return toast('Folge erst der Anleitung.');
@@ -1104,10 +1174,10 @@ if(INBOX){let ib={};try{ib=JSON.parse(localStorage.getItem(INBOX)||'{}')||{}}cat
  const days=Object.keys(ib).sort();if(days.length){if(S.playing&&S.playDay&&days.some(d=>d>S.playDay))endSession();let seeds=0,got=0;
   for(const d of days){const {e=0,h=0}=ib[d]||{};if(S.dayStr!==d){S.dayStr=d;S.day++;S.learned=false;S.ans=0}
    let half=0;for(let k=0;k<e+h;k++){const v=k<e?1:2;half+=S.ans<CAP?v*2:v;S.ans++}S.frac+=half;const sd=Math.floor(S.frac/2);S.frac-=sd*2;S.seeds+=sd;seeds+=sd;got+=e+h;
-   if(!S.learned){S.learned=true;S.parcels=Math.min(3,S.parcels+1)}
+   if(!S.learned){S.learned=true;S.parcels=Math.min(3,S.parcels+1)}noteLearn(Math.round(Date.parse(d+'T12:00:00Z')/864e5));
    if(!S.unlocked&&!S.playing){S.cnt=Math.min(GOAL,S.cnt+e+h);if(S.cnt>=GOAL)S.unlocked=true}}
   try{localStorage.removeItem(INBOX)}catch(e){}save();render();setTimeout(()=>toast(`Fürs Lernen: +${seeds} Samen`+(S.unlocked&&!S.playing?' · Farm freigeschaltet!':'')),900)}}
-welcome();
+welcome();nightFx();setInterval(nightFx,600000);
 if(/[?&]test/.test(location.search)||!WK)window.__F={get S(){return S},act,av,have,resv,nextZ,goal,newOrder,goZone,hideSheet,render,setZone};
 }
 </script>

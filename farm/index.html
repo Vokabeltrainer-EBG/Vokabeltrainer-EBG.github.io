@@ -199,7 +199,7 @@ button:focus-visible{outline:3px solid #1d63d8;outline-offset:3px}
 .note .chain{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;white-space:nowrap}
 body.edit.hassel #map{touch-action:none}
 .wkback:not([hidden]){opacity:1!important;text-decoration:none;display:inline-flex;align-items:center;border-style:solid;min-height:44px;margin-right:16px}
-.gate .go{display:none}.gate.open .go{display:inline}.gate.open .gc{display:none}
+.gate .dr{transition:transform .4s ease;transform-box:fill-box;transform-origin:0% 100%}.gate.open .dr{transform:scaleX(.18) skewY(-14deg)}@media(prefers-reduced-motion:reduce){.gate .dr{transition:none}}
 .obj[data-act=tree]::after{content:'';position:absolute;inset:0}
 </style>
 </head>
@@ -557,7 +557,7 @@ function ground(){if(!SPR.grass)return groundOld();const r=seeded(11);let s=`<sv
  const edge=(A,B,gate)=>{const n=Math.round((B[0]-A[0])/88);let o='';const segs=[],gates=[];for(let i=0;i<n;i++){const a=[A[0]+(B[0]-A[0])*i/n,A[1]+(B[1]-A[1])*i/n],b=[A[0]+(B[0]-A[0])*(i+1)/n,A[1]+(B[1]-A[1])*(i+1)/n];
    const m=[(a[0]+b[0])/2,(a[1]+b[1])/2];let near=nearPath(m[0],m[1],60);if(!near)segs.push([a,b]);else gates.push([a,b])}
   const up=B[1]<A[1];(up?segs.reverse():segs).forEach(([a,b],i)=>{o+=fseg(a,b)+tuft(i%2?'tuft1':'tuft2',a[0],a[1]+3,18)});
-  if(SPR.gate)gates.forEach(([a,b],i)=>{const w=b[0]-a[0],h=w*.821,sk=Math.atan2(b[1]-a[1],w)*180/Math.PI;o+=`<g class="gate" data-x="${((a[0]+b[0])/2).toFixed(0)}" data-y="${((a[1]+b[1])/2).toFixed(0)}"><g class="gc">${fseg(a,b)}</g><g class="go" transform="translate(${a[0].toFixed(1)} ${a[1].toFixed(1)}) skewY(${sk.toFixed(2)})"><image href="${SPR.gate}" x="0" y="${(2-h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" ${i===0?`transform="translate(${w.toFixed(1)} 0) scale(-1 1)"`:''}/></g></g>`});return o};
+  if(SPR.gate)gates.forEach(([a,b],i)=>{const w=b[0]-a[0],h=w*.821,sk=Math.atan2(b[1]-a[1],w)*180/Math.PI;o+=`<g class="gate" data-x="${((a[0]+b[0])/2).toFixed(0)}" data-y="${((a[1]+b[1])/2).toFixed(0)}"><g transform="translate(${a[0].toFixed(1)} ${a[1].toFixed(1)}) skewY(${sk.toFixed(2)})"><g ${i===0?`transform="translate(${w.toFixed(1)} 0) scale(-1 1)"`:''}>${[['gate-pl',0,44],['gate-dr',44,142],['gate-pr',186,54]].map(([f,x0,ww])=>`<image ${f==='gate-dr'?'class="dr" ':''}href="assets/${f}.png" x="${(w*x0/240).toFixed(1)}" y="${(2-h).toFixed(1)}" width="${(w*ww/240).toFixed(1)}" height="${h.toFixed(1)}"/>`).join('')}</g></g></g>`});return o};
  if(Z==='farm'&&!S.zones.obst&&SPR.treeApple)s+=`<g opacity=".75"><image href="${SPR.treeApple}" x="385" y="105" width="110" height="116"/></g>`;
  if(Z==='farm'&&!S.zones.vieh&&SPR.bCoop)s+=`<g opacity=".7"><ellipse cx="100" cy="272" rx="60" ry="16" fill="url(#gSoft)" opacity=".3"/><image href="${SPR.bCoop}" x="40" y="150" width="120" height="134"/></g>`;
  if(Z==='farm'&&!S.zones.mill&&SPR.bMill)s+=`<g opacity=".7"><ellipse cx="1180" cy="127" rx="70" ry="20" fill="url(#gSoft)" opacity=".3"/><image href="${SPR.bMill}" x="1105" y="-75" width="150" height="202"/></g>`;
